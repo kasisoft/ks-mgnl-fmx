@@ -1,7 +1,7 @@
 Purpose
 =======
 
-'''NOTE:''' This documentation is currently work-in-progress and therefore incomplete. 28-Sep-2016
+'''NOTE:''' This documentation is currently work-in-progress and therefore incomplete. 03-Oct-2016
 
 Magnolia module providing some additions to the freemarker based generation process.
 
