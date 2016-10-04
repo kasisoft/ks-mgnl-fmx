@@ -104,12 +104,6 @@
       </dependency>
       
       <dependency>
-        <groupId>com.kasisoft</groupId>
-        <artifactId>com.kasisoft.libs.common</artifactId>
-        <version>${version-kcl}</version>
-      </dependency>
-
-      <dependency>
         <groupId>com.google.code.findbugs</groupId>
         <artifactId>annotations</artifactId>
         <version>${version-findbugs-annotations}</version>
