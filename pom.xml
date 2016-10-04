@@ -364,14 +364,14 @@
   
   <distributionManagement>
     <repository>
-      <id>kasisoft-releases</id>
-      <name>kasisoft.com-releases</name>
-      <url>https://kasisoft.com/artifactory/libs-release-local</url>
+      <id>kasisoft-mgnl-releases</id>
+      <name>kasisoft-mgnl-releases</name>
+      <url>https://kasisoft.com/artifactory/mgnl</url>
     </repository>
     <snapshotRepository>
-      <id>kasisoft-snapshots</id>
-      <name>kasisoft.com-snapshots</name>
-      <url>https://kasisoft.com/artifactory/libs-snapshot-local</url>
+      <id>kasisoft-mgnl-snapshots</id>
+      <name>kasisoft-mgnl-snapshots</name>
+      <url>https://kasisoft.com/artifactory/mgnl</url>
     </snapshotRepository>
   </distributionManagement>
   
