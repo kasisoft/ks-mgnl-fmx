@@ -389,6 +389,16 @@
         <enabled>true</enabled>
       </snapshots>
     </repository>
+    <repository>
+      <id>kasisoft-mgnl</id>
+      <url>https://kasisoft.com/artifactory/mgnl</url>
+      <releases>
+        <enabled>true</enabled>
+      </releases>
+      <snapshots>
+        <enabled>true</enabled>
+      </snapshots>
+    </repository>
   </repositories>
   
 </project>
