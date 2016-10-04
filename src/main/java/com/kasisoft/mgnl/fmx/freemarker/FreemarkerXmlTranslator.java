@@ -26,8 +26,7 @@ public class FreemarkerXmlTranslator {
     StringFBuilder builder = new StringFBuilder();
     Node doc = (Node) JAXB.unmarshal( reader, Object.class );
     doc.normalize();
-    serialize( builder, new StringBuilder(""), doc );
-    System.err.println( "#> " + doc + " - " + doc.getClass().getName() );
+    serialize( builder, new StringBuilder(), doc );
     return builder.toString();
   }
   
