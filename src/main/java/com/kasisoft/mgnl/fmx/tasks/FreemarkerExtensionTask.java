@@ -10,8 +10,9 @@ public class FreemarkerExtensionTask extends JcrConfigurationTask {
 
   public FreemarkerExtensionTask() {
     super( "Freemarker extension", "Installing freemarker extension" );
-    register( extendedConfig () );
-    register( ftxLoader      () );
+    register( extendedConfig  () );
+    register( ftxLoader       () );
+    register( sharedVariables () );
   }
   
   private TreeBuilder extendedConfig() {
@@ -24,8 +25,15 @@ public class FreemarkerExtensionTask extends JcrConfigurationTask {
   
   private TreeBuilder ftxLoader() {
     return new TreeBuilder()
-      .sNode( "server/rendering/freemarker/templateLoaders/ftx" )
+      .sNode( "server/rendering/freemarker/templateLoaders/fmx" )
         .clazz( FmxResourceLoader.class )
+      .sEnd()
+      ;
+  }
+
+  private TreeBuilder sharedVariables() {
+    return new TreeBuilder()
+      .sNode( "server/rendering/freemarker/sharedVariables" )
       .sEnd()
       ;
   }

@@ -21,14 +21,17 @@ public class FmxResourceLoader extends ResourceTemplateLoader {
   
   static final String SUFFIX = ".fmx";
   
+  FreemarkerXmlTranslator   translator;
+  
   @Inject
   public FmxResourceLoader( @Nonnull ResourceOrigin origin ) {
     super( origin );
+    translator = new FreemarkerXmlTranslator();
   }
   
   @Override
   public Object findTemplateSource( @Nonnull String name ) throws IOException {
-    Object result = null;
+    FmxRecord result = null;
     if( (name != null) && name.endsWith( SUFFIX ) ) {
       Resource resource = (Resource) super.findTemplateSource( name );
       if( resource != null ) {
@@ -49,7 +52,7 @@ public class FmxResourceLoader extends ResourceTemplateLoader {
   }
 
   @Override
-  public Reader getReader( Object templateSource, String encoding ) throws IOException {
+  public Reader getReader( @Nullable Object templateSource, @Nullable String encoding ) throws IOException {
     Reader result = null;
     if( templateSource instanceof FmxRecord ) {
       FmxRecord fmxRecord = (FmxRecord) templateSource;
@@ -59,7 +62,7 @@ public class FmxResourceLoader extends ResourceTemplateLoader {
   }
 
   @Override
-  public void closeTemplateSource( Object templateSource ) throws IOException {
+  public void closeTemplateSource( @Nullable Object templateSource ) throws IOException {
     if( templateSource instanceof FmxRecord ) {
       FmxRecord fmxRecord = (FmxRecord) templateSource;
       super.closeTemplateSource( fmxRecord.resource );
@@ -73,7 +76,8 @@ public class FmxResourceLoader extends ResourceTemplateLoader {
   }
 
   private String loadTranslation( Reader reader ) {
-    return null;
+    String result = translator.convert( reader );
+    return result;
   }
   
   @AllArgsConstructor

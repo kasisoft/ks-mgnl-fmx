@@ -34,7 +34,7 @@ public class ExtendedFreemarkerConfig extends FreemarkerConfig {
   }
 
   @Override
-  public void setSharedVariables( Map<String, Object> configuredSharedVariables ) throws TemplateModelException {
+  public void setSharedVariables( @Nonnull Map<String, Object> configuredSharedVariables ) throws TemplateModelException {
     super.setSharedVariables( configuredSharedVariables );
     getSharedVariables().putAll( directives );
   }
