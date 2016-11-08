@@ -12,15 +12,19 @@ import java.util.*;
 
 import java.io.*;
 
+import lombok.experimental.*;
+
 import lombok.*;
 
 /**
  * @author daniel.kasmeroglu@kasisoft.net
  */
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class FreemarkerXmlTranslator {
 
   static final String FMX_NAMESPACE   = "https://kasisoft.com/namespaces/fmx/0.1";
   static final String FMX_NAMESPACE_S = "https://kasisoft.com/namespaces/fmx/0.1/";
+  static final String DEFAULT_PREFIX  = "fmx";
   
   public String convert( Reader reader ) {
     StringFBuilder builder = new StringFBuilder();
@@ -218,7 +222,7 @@ public class FreemarkerXmlTranslator {
   }
 
   private boolean isFmxRelevant( Node node ) {
-    return isFmxNamespace( node.getNamespaceURI() );
+    return isFmxNamespace( node.getNamespaceURI() ) || DEFAULT_PREFIX.equals( node.getPrefix() );
   }
 
   private boolean isEmpty( List list ) {

@@ -1,5 +1,7 @@
 package com.kasisoft.mgnl.fmx.freemarker;
 
+import com.kasisoft.libs.common.io.*;
+
 import javax.annotation.*;
 import javax.inject.*;
 
@@ -76,7 +78,13 @@ public class FmxResourceLoader extends ResourceTemplateLoader {
   }
 
   private String loadTranslation( Reader reader ) {
-    String result = translator.convert( reader );
+    String fullInput = IoFunctions.readTextFully( reader );
+    String result    = translator.convert( new StringReader( fullInput ) );
+    System.err.println( "---- before ----" );
+    System.err.println( fullInput );
+    System.err.println( "---- after ----" );
+    System.err.println( result );
+    System.err.println( "---- done ----" );
     return result;
   }
   
