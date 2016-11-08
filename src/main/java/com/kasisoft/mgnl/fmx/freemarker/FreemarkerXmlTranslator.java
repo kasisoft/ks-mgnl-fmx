@@ -26,12 +26,33 @@ public class FreemarkerXmlTranslator {
   static final String FMX_NAMESPACE_S = "https://kasisoft.com/namespaces/fmx/0.1/";
   static final String DEFAULT_PREFIX  = "fmx";
   
-  public String convert( Reader reader ) {
+  static final String WRAPPER = "<fmx:wrappingElement xmlns:fmx=\"%s\">%s</fmx:wrappingElement>";
+  
+  public String convert( String xmlInput ) {
+    return convert( new StringReader( String.format( WRAPPER, FMX_NAMESPACE, xmlInput ) ) );
+  }
+  
+  private String convert( Reader reader ) {
     StringFBuilder builder = new StringFBuilder();
     Node doc = (Node) JAXB.unmarshal( reader, Object.class );
+    doc      = getFirstElement( doc );
     doc.normalize();
     serialize( builder, new StringBuilder(), doc );
     return builder.toString();
+  }
+  
+  private Node getFirstElement( Node parent ) {
+    Node     result   = null;
+    NodeList children = parent.getChildNodes();
+    if( children != null ) {
+      for( int i = 0; i < children.getLength(); i++ ) {
+        if( children.item(i).getNodeType() == Node.ELEMENT_NODE ) {
+          result = children.item(i);
+          break;
+        }
+      }
+    }
+    return result;
   }
   
   private List<Node> getChildren( Node parent ) {

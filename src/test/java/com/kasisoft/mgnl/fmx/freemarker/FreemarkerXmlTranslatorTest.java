@@ -9,8 +9,6 @@ import org.testng.annotations.*;
 
 import java.util.*;
 
-import java.io.*;
-
 import lombok.experimental.*;
 
 import lombok.*;
@@ -47,7 +45,7 @@ public class FreemarkerXmlTranslatorTest {
   
   @Test(dataProvider = "convertData")
   public void convert( String fmxContent, String ftlContent ) {
-    String converted  = translator.convert( new StringReader( fmxContent ) );
+    String converted  = translator.convert( fmxContent );
     assertThat( converted, is( ftlContent ) );
   }
 
