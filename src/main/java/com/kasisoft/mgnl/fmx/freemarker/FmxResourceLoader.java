@@ -80,11 +80,13 @@ public class FmxResourceLoader extends ResourceTemplateLoader {
   private String loadTranslation( Reader reader ) {
     String fullInput = IoFunctions.readTextFully( reader );
     String result    = translator.convert( fullInput );
+    /*
     System.err.println( "---- before ----" );
     System.err.println( fullInput );
     System.err.println( "---- after ----" );
     System.err.println( result );
     System.err.println( "---- done ----" );
+    */
     return result;
   }
   
