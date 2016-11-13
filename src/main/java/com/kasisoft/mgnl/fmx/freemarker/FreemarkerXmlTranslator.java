@@ -89,12 +89,13 @@ public class FreemarkerXmlTranslator {
     
     collectAttributes( node.getAttributes(), standardAttributes, fmxAttributes );
     
-    FmxList     list      = FmxList     . parse( fmxAttributes );
-    FmxIterator iterator  = FmxIterator . parse( fmxAttributes );
-    FmxDepends  depends   = FmxDepends  . parse( fmxAttributes );
+    FmxList           list            = FmxList           . parse( fmxAttributes );
+    FmxIterator       iterator        = FmxIterator       . parse( fmxAttributes );
+    FmxDepends        depends         = FmxDepends        . parse( fmxAttributes );
+    FmxDisableDepends disableDepends  = FmxDisableDepends . parse( fmxAttributes );
     
     List<Node> children = getChildren( node );
-    openDepends( builder, indention, depends );
+    openDepends( builder, indention, depends, disableDepends );
     openList( builder, indention, list, iterator );
     if( isFmxRelevant( node ) ) {
       String name = node.getLocalName().replace( '-', '.' );
@@ -143,11 +144,19 @@ public class FreemarkerXmlTranslator {
     }
   }
 
-  private void openDepends( StringFBuilder builder, StringBuilder indention, FmxDepends depends ) {
+  private void openDepends( StringFBuilder builder, StringBuilder indention, FmxDepends depends, FmxDisableDepends disableDepends ) {
     if( depends != null ) {
       builder.appendF( "%s[#if ", indention );
+      if( disableDepends != null ) {
+        builder.append("(");
+        for( String expr : disableDepends.getExpressions() ) {
+          builder.appendF( "%s || ", expr, expr, expr );
+        }
+        builder.setLength( builder.length() - " || ".length() );
+        builder.append(") || ");
+      }
       for( String expr : depends.getExpressions() ) {
-        builder.appendF( "%s?has_content && ", expr );
+        builder.appendF( "%s && ", expr, expr, expr );
       }
       builder.setLength( builder.length() - " && ".length() );
       builder.appendF( "]\n" );
@@ -331,6 +340,42 @@ public class FreemarkerXmlTranslator {
             }
             if( ! values.isEmpty() ) {
               result = new FmxDepends( values );
+            }
+          }
+        }
+      }
+      return result;
+    }
+    
+  } /* ENDCLASS */
+
+  @AllArgsConstructor
+  private static class FmxDisableDepends {
+    
+    static final String NAME = "disable-depends";
+    
+    @Getter
+    List<String>   expressions;
+    
+    public static FmxDisableDepends parse( List<Attr> attributes ) {
+      FmxDisableDepends result = null;
+      for( int i = attributes.size() - 1; i >= 0; i-- ) {
+        Attr attr = attributes.get(i);
+        if( NAME.equals( attr.getLocalName() ) ) {
+          attributes.remove(i);
+          String value = StringFunctions.cleanup( attr.getNodeValue() );
+          if( value != null ) {
+            List<String> values = new ArrayList<>( Arrays.asList( value.split( "," ) ) );
+            for( int j = values.size() - 1; j >= 0; j-- ) {
+              String v = StringFunctions.cleanup( values.get(j) );
+              if( v == null ) {
+                values.remove(j);
+              } else {
+                values.set( j, v );
+              }
+            }
+            if( ! values.isEmpty() ) {
+              result = new FmxDisableDepends( values );
             }
           }
         }
