@@ -2,6 +2,8 @@ package com.kasisoft.mgnl.fmx.freemarker;
 
 import com.kasisoft.libs.common.text.*;
 
+import com.kasisoft.libs.common.util.*;
+
 import org.w3c.dom.*;
 
 import javax.xml.bind.*;
@@ -22,25 +24,37 @@ import lombok.*;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class FreemarkerXmlTranslator {
 
-  static final String FMX_NAMESPACE   = "https://kasisoft.com/namespaces/fmx/0.1";
-  static final String FMX_NAMESPACE_S = "https://kasisoft.com/namespaces/fmx/0.1/";
-  static final String DEFAULT_PREFIX  = "fmx";
+  static final String FMX_NAMESPACE       = "https://kasisoft.com/namespaces/fmx/0.1";
+  static final String FMX_NAMESPACE_S     = "https://kasisoft.com/namespaces/fmx/0.1/";
   
-  static final String WRAPPER = "<fmx:wrappingElement xmlns:fmx=\"%s\">%s</fmx:wrappingElement>";
+  static final String DEFAULT_PREFIX      = "fmx";
+  
+  static final String WRAPPER             = "<fmx:wrappingElement xmlns:fmx=\"%s\">%s</fmx:wrappingElement>";
+  
+  static final String FMX_LIST            = "list";
+  static final String FMX_IT              = "it";
+  static final String FMX_DEPENDS         = "depends";
+  static final String FMX_DISABLE_DEPENDS = "disable-depends";
+  
+  static final Bucket<StringFBuilder> STRINGFBUILDER = BucketFactories.newStringFBuilderBucket();
+  static final Bucket<List<Attr>>     LIST_ATTR      = BucketFactories.newArrayListBucket();
   
   public String convert( String xmlInput ) {
     return convert( new StringReader( String.format( WRAPPER, FMX_NAMESPACE, xmlInput ) ) );
   }
   
   private String convert( Reader reader ) {
-    StringFBuilder builder = new StringFBuilder();
+    return STRINGFBUILDER.forInstance( this::convertImpl, reader );
+  }
+
+  private String convertImpl( StringFBuilder builder, Reader reader ) {
     Node doc = (Node) JAXB.unmarshal( reader, Object.class );
     doc      = getFirstElement( doc );
     doc.normalize();
     serialize( builder, new StringBuilder(), doc );
     return builder.toString();
   }
-  
+
   private Node getFirstElement( Node parent ) {
     Node     result   = null;
     NodeList children = parent.getChildNodes();
@@ -84,78 +98,79 @@ public class FreemarkerXmlTranslator {
   
   private void serializeFmxNode( StringFBuilder builder, StringBuilder indention, Node node ) {
     
-    List<Attr>  standardAttributes  = new ArrayList<>();
-    List<Attr>  fmxAttributes       = new ArrayList<>();
+    List<Attr>  standardAttributes  = LIST_ATTR.allocate();
+    List<Attr>  fmxAttributes       = LIST_ATTR.allocate();
     
-    collectAttributes( node.getAttributes(), standardAttributes, fmxAttributes );
+    try {
     
-    FmxList           list            = FmxList           . parse( fmxAttributes );
-    FmxIterator       iterator        = FmxIterator       . parse( fmxAttributes );
-    FmxDepends        depends         = FmxDepends        . parse( fmxAttributes );
-    FmxDisableDepends disableDepends  = FmxDisableDepends . parse( fmxAttributes );
-    
-    List<Node> children = getChildren( node );
-    openDepends( builder, indention, depends, disableDepends );
-    openList( builder, indention, list, iterator );
-    if( isFmxRelevant( node ) ) {
-      String name = node.getLocalName().replace( '-', '.' );
-      if( isEmpty( children ) ) {
-        if( node.getNodeType() == Node.TEXT_NODE ) {
-          builder.append( node.getNodeValue() );
+      collectAttributes( node.getAttributes(), standardAttributes, fmxAttributes );
+      
+      String       list            = parseSingle  ( FMX_LIST            , fmxAttributes );
+      String       iterator        = parseSingle  ( FMX_IT              , fmxAttributes );
+      List<String> depends         = parseMany    ( FMX_DEPENDS         , fmxAttributes );
+      List<String> disableDepends  = parseMany    ( FMX_DISABLE_DEPENDS , fmxAttributes );
+      
+      List<Node> children = getChildren( node );
+      openDepends( builder, indention, depends, disableDepends );
+      openList( builder, indention, list, iterator );
+      if( isFmxRelevant( node ) ) {
+        String name = node.getLocalName().replace( '-', '.' );
+        if( isEmpty( children ) ) {
+          if( node.getNodeType() == Node.TEXT_NODE ) {
+            builder.append( node.getNodeValue() );
+          } else {
+            builder.appendF( "%s[@%s", indention, name );
+            serializeAttributes( builder, standardAttributes );
+            builder.appendF( " /]\n" );
+          }
         } else {
           builder.appendF( "%s[@%s", indention, name );
           serializeAttributes( builder, standardAttributes );
-          builder.appendF( " /]\n" );
+          builder.appendF( "]" );
+          serializeChildren( builder, indention, children );
+          builder.appendF( "[/@%s]\n", name );
         }
       } else {
-        builder.appendF( "%s[@%s", indention, name );
-        serializeAttributes( builder, standardAttributes );
-        builder.appendF( "]" );
-        serializeChildren( builder, indention, children );
-        builder.appendF( "[/@%s]\n", name );
+        serializeOrdinaryNode( builder, indention, node );
       }
-    } else {
-      serializeOrdinaryNode( builder, indention, node );
+      closeFtlTag( builder, indention, "list", list );
+      closeFtlTag( builder, indention, "if", depends );
+
+    } finally {
+      LIST_ATTR.free( standardAttributes );
+      LIST_ATTR.free( fmxAttributes      );
     }
-    closeList( builder, indention, list );
-    closeDepends( builder, indention, depends );
     
   }
 
-  private void closeList( StringFBuilder builder, StringBuilder indention, FmxList list ) {
-    if( list != null ) {
-      builder.appendF( "%s[/#list]\n", indention );
+  private void closeFtlTag( StringFBuilder builder, StringBuilder indention, String tag, Object test ) {
+    if( test != null ) {
+      builder.appendF( "%s[/#%s]\n", indention, tag );
     }
   }
-
-  private void openList( StringFBuilder builder, StringBuilder indention, FmxList list, FmxIterator iterator ) {
+  
+  private void openList( StringFBuilder builder, StringBuilder indention, String list, String iterator ) {
     if( list != null ) {
       String it = "it";
       if( iterator != null ) {
-        it = iterator.getExpression();
+        it = iterator;
       }
-      builder.appendF( "%s[#list %s as %s]\n", indention, list.getExpression(), it );
+      builder.appendF( "%s[#list %s as %s]\n", indention, list, it );
     }
   }
 
-  private void closeDepends( StringFBuilder builder, StringBuilder indention, FmxDepends depends ) {
-    if( depends != null ) {
-      builder.appendF( "%s[/#if]\n", indention );
-    }
-  }
-
-  private void openDepends( StringFBuilder builder, StringBuilder indention, FmxDepends depends, FmxDisableDepends disableDepends ) {
+  private void openDepends( StringFBuilder builder, StringBuilder indention, List<String> depends, List<String> disableDepends ) {
     if( depends != null ) {
       builder.appendF( "%s[#if ", indention );
       if( disableDepends != null ) {
         builder.append("(");
-        for( String expr : disableDepends.getExpressions() ) {
+        for( String expr : disableDepends ) {
           builder.appendF( "%s || ", expr, expr, expr );
         }
         builder.setLength( builder.length() - " || ".length() );
         builder.append(") || ");
       }
-      for( String expr : depends.getExpressions() ) {
+      for( String expr : depends ) {
         builder.appendF( "%s && ", expr, expr, expr );
       }
       builder.setLength( builder.length() - " && ".length() );
@@ -165,22 +180,26 @@ public class FreemarkerXmlTranslator {
   
   private void serializeOrdinaryNode( StringFBuilder builder, StringBuilder indention, Node node ) {
     List<Node> children           = getChildren( node );
-    List<Attr> standardAttributes = new ArrayList<>();
-    collectAttributes( node.getAttributes(), standardAttributes, null );
-    if( isEmpty( children ) ) {
-      if( node.getNodeType() == Node.TEXT_NODE ) {
-        builder.append( node.getNodeValue() );
+    List<Attr> standardAttributes = LIST_ATTR.allocate();
+    try {
+      collectAttributes( node.getAttributes(), standardAttributes, null );
+      if( isEmpty( children ) ) {
+        if( node.getNodeType() == Node.TEXT_NODE ) {
+          builder.append( node.getNodeValue() );
+        } else {
+          builder.appendF( "%s<%s", indention, node.getNodeName() );
+          serializeAttributes( builder, standardAttributes );
+          builder.appendF( " />\n" );
+        }
       } else {
         builder.appendF( "%s<%s", indention, node.getNodeName() );
         serializeAttributes( builder, standardAttributes );
-        builder.appendF( " />\n" );
+        builder.appendF( ">" );
+        serializeChildren( builder, indention, children );
+        builder.appendF( "</%s>\n", node.getNodeName() );
       }
-    } else {
-      builder.appendF( "%s<%s", indention, node.getNodeName() );
-      serializeAttributes( builder, standardAttributes );
-      builder.appendF( ">" );
-      serializeChildren( builder, indention, children );
-      builder.appendF( "</%s>\n", node.getNodeName() );
+    } finally {
+      LIST_ATTR.free( standardAttributes );
     }
   }
   
@@ -219,9 +238,7 @@ public class FreemarkerXmlTranslator {
   
   private void serializeAttributes( StringFBuilder builder, List<Attr> attributes ) {
     if( ! isEmpty( attributes ) ) {
-      for( Attr attr : attributes ) {
-        serializeAttribute( builder, attr );
-      }
+      attributes.forEach( $ -> serializeAttribute( builder, $ ) );
     }
   }
   
@@ -266,123 +283,49 @@ public class FreemarkerXmlTranslator {
   private boolean isFmxNamespace( String text ) {
     return FMX_NAMESPACE.equals( text ) || FMX_NAMESPACE_S.equals( text );
   }
+  
+  private String parseSingle( String name, List<Attr> attributes ) {
+    String result = null;
+    for( int i = attributes.size() - 1; i >= 0; i-- ) {
+      Attr attr = attributes.get(i);
+      if( name.equals( attr.getLocalName() ) ) {
+        attributes.remove(i);
+        result = StringFunctions.cleanup( attr.getNodeValue() );
+      }
+    }
+    return result;
+  }
 
-  @AllArgsConstructor
-  private static class FmxList {
-    
-    static final String NAME = "list";
-    
-    @Getter
-    String   expression;
-    
-    public static FmxList parse( List<Attr> attributes ) {
-      FmxList result = null;
-      for( int i = attributes.size() - 1; i >= 0; i-- ) {
-        Attr attr = attributes.get(i);
-        if( NAME.equals( attr.getLocalName() ) ) {
-          attributes.remove(i);
-          String value = StringFunctions.cleanup( attr.getNodeValue() );
-          result       = new FmxList( value );
+  private List<String> parseMany( String name, List<Attr> attributes ) {
+    List<String> result = null;
+    for( int i = attributes.size() - 1; i >= 0; i-- ) {
+      Attr attr = attributes.get(i);
+      if( name.equals( attr.getLocalName() ) ) {
+        attributes.remove(i);
+        List<String> values = getValues( attr );
+        if( ! values.isEmpty() ) {
+          result = values;
         }
       }
-      return result;
     }
-    
-  } /* ENDCLASS */
+    return result;
+  }
 
-  @AllArgsConstructor
-  private static class FmxIterator {
-    
-    static final String NAME = "it";
-    
-    @Getter
-    String   expression;
-    
-    public static FmxIterator parse( List<Attr> attributes ) {
-      FmxIterator result = null;
-      for( int i = attributes.size() - 1; i >= 0; i-- ) {
-        Attr attr = attributes.get(i);
-        if( NAME.equals( attr.getLocalName() ) ) {
-          attributes.remove(i);
-          String value = StringFunctions.cleanup( attr.getNodeValue() );
-          result       = new FmxIterator( value );
+  private List<String> getValues( Node node ) {
+    List<String> result = Collections.emptyList();
+    String value = StringFunctions.cleanup( node.getNodeValue() );
+    if( value != null ) {
+      result = new ArrayList<>( Arrays.asList( value.split( "," ) ) );
+      for( int j = result.size() - 1; j >= 0; j-- ) {
+        String v = StringFunctions.cleanup( result.get(j) );
+        if( v == null ) {
+          result.remove(j);
+        } else {
+          result.set( j, v );
         }
       }
-      return result;
     }
-    
-  } /* ENDCLASS */
-
-  @AllArgsConstructor
-  private static class FmxDepends {
-    
-    static final String NAME = "depends";
-    
-    @Getter
-    List<String>   expressions;
-    
-    public static FmxDepends parse( List<Attr> attributes ) {
-      FmxDepends result = null;
-      for( int i = attributes.size() - 1; i >= 0; i-- ) {
-        Attr attr = attributes.get(i);
-        if( NAME.equals( attr.getLocalName() ) ) {
-          attributes.remove(i);
-          String value = StringFunctions.cleanup( attr.getNodeValue() );
-          if( value != null ) {
-            List<String> values = new ArrayList<>( Arrays.asList( value.split( "," ) ) );
-            for( int j = values.size() - 1; j >= 0; j-- ) {
-              String v = StringFunctions.cleanup( values.get(j) );
-              if( v == null ) {
-                values.remove(j);
-              } else {
-                values.set( j, v );
-              }
-            }
-            if( ! values.isEmpty() ) {
-              result = new FmxDepends( values );
-            }
-          }
-        }
-      }
-      return result;
-    }
-    
-  } /* ENDCLASS */
-
-  @AllArgsConstructor
-  private static class FmxDisableDepends {
-    
-    static final String NAME = "disable-depends";
-    
-    @Getter
-    List<String>   expressions;
-    
-    public static FmxDisableDepends parse( List<Attr> attributes ) {
-      FmxDisableDepends result = null;
-      for( int i = attributes.size() - 1; i >= 0; i-- ) {
-        Attr attr = attributes.get(i);
-        if( NAME.equals( attr.getLocalName() ) ) {
-          attributes.remove(i);
-          String value = StringFunctions.cleanup( attr.getNodeValue() );
-          if( value != null ) {
-            List<String> values = new ArrayList<>( Arrays.asList( value.split( "," ) ) );
-            for( int j = values.size() - 1; j >= 0; j-- ) {
-              String v = StringFunctions.cleanup( values.get(j) );
-              if( v == null ) {
-                values.remove(j);
-              } else {
-                values.set( j, v );
-              }
-            }
-            if( ! values.isEmpty() ) {
-              result = new FmxDisableDepends( values );
-            }
-          }
-        }
-      }
-      return result;
-    }
-    
-  } /* ENDCLASS */
+    return result;
+  }
 
 } /* ENDCLASS */
