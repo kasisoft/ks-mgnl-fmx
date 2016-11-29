@@ -1,4 +1,4 @@
-package com.kasisoft.mgnl.fmx;
+package com.kasisoft.mgnl.fmx.internal;
 
 import com.kasisoft.mgnl.fmx.tasks.*;
 import com.kasisoft.mgnl.versionhandler.*;
