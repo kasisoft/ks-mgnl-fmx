@@ -9,14 +9,9 @@ import org.testng.annotations.*;
 
 import java.util.*;
 
-import lombok.experimental.*;
-
-import lombok.*;
-
 /**
  * @author daniel.kasmeroglu@kasisoft.net
  */
-@FieldDefaults(level = AccessLevel.PRIVATE)
 public class FreemarkerXmlTranslatorTest {
 
   private static final String[] TESTCASES = new String[] {
@@ -30,7 +25,7 @@ public class FreemarkerXmlTranslatorTest {
     "example8",
   };
   
-  FreemarkerXmlTranslator translator = new FreemarkerXmlTranslator();
+  private FreemarkerXmlTranslator translator = new FreemarkerXmlTranslator();
   
   @DataProvider(name = "convertData")
   public Object[][] convertData() {

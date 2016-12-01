@@ -14,30 +14,25 @@ import java.util.*;
 
 import java.io.*;
 
-import lombok.experimental.*;
-
-import lombok.*;
-
 /**
  * @author daniel.kasmeroglu@kasisoft.net
  */
-@FieldDefaults(level = AccessLevel.PRIVATE)
 public class FreemarkerXmlTranslator {
 
-  static final String FMX_NAMESPACE       = "https://kasisoft.com/namespaces/fmx/0.1";
-  static final String FMX_NAMESPACE_S     = "https://kasisoft.com/namespaces/fmx/0.1/";
+  private static final String FMX_NAMESPACE       = "https://kasisoft.com/namespaces/fmx/0.1";
+  private static final String FMX_NAMESPACE_S     = "https://kasisoft.com/namespaces/fmx/0.1/";
   
-  static final String DEFAULT_PREFIX      = "fmx";
+  private static final String DEFAULT_PREFIX      = "fmx";
   
-  static final String WRAPPER             = "<fmx:wrappingElement xmlns:fmx=\"%s\">%s</fmx:wrappingElement>";
+  private static final String WRAPPER             = "<fmx:wrappingElement xmlns:fmx=\"%s\">%s</fmx:wrappingElement>";
   
-  static final String FMX_LIST            = "list";
-  static final String FMX_IT              = "it";
-  static final String FMX_DEPENDS         = "depends";
-  static final String FMX_DISABLE_DEPENDS = "disable-depends";
+  private static final String FMX_LIST            = "list";
+  private static final String FMX_IT              = "it";
+  private static final String FMX_DEPENDS         = "depends";
+  private static final String FMX_DISABLE_DEPENDS = "disable-depends";
   
-  static final Bucket<StringFBuilder> STRINGFBUILDER = BucketFactories.newStringFBuilderBucket();
-  static final Bucket<List<Attr>>     LIST_ATTR      = BucketFactories.newArrayListBucket();
+  private static final Bucket<StringFBuilder> STRINGFBUILDER = BucketFactories.newStringFBuilderBucket();
+  private static final Bucket<List<Attr>>     LIST_ATTR      = BucketFactories.newArrayListBucket();
   
   public String convert( String xmlInput ) {
     return convert( new StringReader( String.format( WRAPPER, FMX_NAMESPACE, xmlInput ) ) );

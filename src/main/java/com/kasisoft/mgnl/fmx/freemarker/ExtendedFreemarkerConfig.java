@@ -6,20 +6,15 @@ import javax.annotation.*;
 
 import java.util.*;
 
-import lombok.experimental.*;
-
-import lombok.*;
-
 import freemarker.template.*;
 import info.magnolia.freemarker.*;
 
 /**
  * @author daniel.kasmeroglu@kasisoft.net
  */
-@FieldDefaults(level = AccessLevel.PRIVATE)
 public class ExtendedFreemarkerConfig extends FreemarkerConfig {
 
-  Map<String, TemplateDirectiveModel>   directives = Collections.emptyMap();
+  private Map<String, TemplateDirectiveModel>   directives = Collections.emptyMap();
   
   @PostConstruct
   public void init() {

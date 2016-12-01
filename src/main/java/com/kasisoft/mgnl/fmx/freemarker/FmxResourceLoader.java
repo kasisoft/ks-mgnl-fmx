@@ -7,10 +7,6 @@ import javax.inject.*;
 
 import java.io.*;
 
-import lombok.experimental.*;
-
-import lombok.*;
-
 import info.magnolia.freemarker.loaders.*;
 import info.magnolia.resourceloader.*;
 import info.magnolia.resourceloader.Resource;
@@ -18,12 +14,11 @@ import info.magnolia.resourceloader.Resource;
 /**
  * @author daniel.kasmeroglu@kasisoft.net
  */
-@FieldDefaults(level = AccessLevel.PRIVATE)
 public class FmxResourceLoader extends ResourceTemplateLoader {
   
-  static final String SUFFIX = ".fmx";
+  private static final String SUFFIX = ".fmx";
   
-  FreemarkerXmlTranslator   translator;
+  private FreemarkerXmlTranslator   translator;
   
   @Inject
   public FmxResourceLoader( @Nonnull ResourceOrigin origin ) {
@@ -90,11 +85,15 @@ public class FmxResourceLoader extends ResourceTemplateLoader {
     return result;
   }
   
-  @AllArgsConstructor
   private static class FmxRecord {
     
     Resource    resource;
     String      translation;
+    
+    public FmxRecord( Resource res, String trans ) {
+      resource    = res;
+      translation = trans;
+    }
     
   } /* ENDCLASS */
   
