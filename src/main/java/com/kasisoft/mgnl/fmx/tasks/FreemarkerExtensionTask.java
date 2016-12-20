@@ -1,5 +1,7 @@
 package com.kasisoft.mgnl.fmx.tasks;
 
+import info.magnolia.module.delta.*;
+
 import com.kasisoft.mgnl.fmx.freemarker.*;
 import com.kasisoft.mgnl.versionhandler.*;
 
@@ -8,11 +10,14 @@ import com.kasisoft.mgnl.versionhandler.*;
  */
 public class FreemarkerExtensionTask extends JcrConfigurationTask {
 
+  private static final String PATH_FMX = "server/rendering/freemarker/templateLoaders/fmx";
+
   public FreemarkerExtensionTask() {
     super( "Freemarker extension", "Installing freemarker extension" );
     register( extendedConfig  () );
     register( ftxLoader       () );
     register( sharedVariables () );
+    register( new OrderNodeToFirstPositionTask( "Positioning fmx loader", PATH_FMX ) );
   }
   
   private TreeBuilder extendedConfig() {
@@ -25,7 +30,7 @@ public class FreemarkerExtensionTask extends JcrConfigurationTask {
   
   private TreeBuilder ftxLoader() {
     return new TreeBuilder()
-      .sNode( "server/rendering/freemarker/templateLoaders/fmx" )
+      .sNode( PATH_FMX )
         .clazz( FmxResourceLoader.class )
       .sEnd()
       ;
