@@ -4,7 +4,10 @@ import com.kasisoft.libs.common.text.*;
 
 import com.kasisoft.libs.common.util.*;
 
+import com.kasisoft.libs.common.xml.*;
+
 import org.w3c.dom.*;
+import org.w3c.dom.Element;
 
 import javax.xml.bind.*;
 
@@ -43,27 +46,17 @@ public class FreemarkerXmlTranslator {
   }
 
   private String convertImpl( StringFBuilder builder, Reader reader ) {
-    Node doc = (Node) JAXB.unmarshal( reader, Object.class );
-    doc      = getFirstElement( doc );
-    doc.normalize();
-    serialize( builder, new StringBuilder(), doc );
+    Node          wrapper   = (Node) JAXB.unmarshal( reader, Object.class );
+    List<Element> elements  = XmlFunctions.getChildElements( wrapper );
+    StringBuilder indention = new StringBuilder();
+    for( Element element : elements ) {
+      element.normalize();
+      serialize( builder, indention, element );
+      indention.setLength(0);
+    }
     return builder.toString();
   }
 
-  private Node getFirstElement( Node parent ) {
-    Node     result   = null;
-    NodeList children = parent.getChildNodes();
-    if( children != null ) {
-      for( int i = 0; i < children.getLength(); i++ ) {
-        if( children.item(i).getNodeType() == Node.ELEMENT_NODE ) {
-          result = children.item(i);
-          break;
-        }
-      }
-    }
-    return result;
-  }
-  
   private List<Node> getChildren( Node parent ) {
     List<Node> result   = Collections.emptyList();
     NodeList   children = parent.getChildNodes();
