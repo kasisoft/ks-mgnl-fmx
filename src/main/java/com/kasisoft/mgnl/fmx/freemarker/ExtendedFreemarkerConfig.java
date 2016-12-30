@@ -2,6 +2,8 @@ package com.kasisoft.mgnl.fmx.freemarker;
 
 import com.kasisoft.libs.common.spi.*;
 
+import org.slf4j.*;
+
 import javax.annotation.*;
 
 import java.util.*;
@@ -14,6 +16,8 @@ import info.magnolia.freemarker.*;
  */
 public class ExtendedFreemarkerConfig extends FreemarkerConfig {
 
+  private static final Logger log = LoggerFactory.getLogger( ExtendedFreemarkerConfig.class );
+  
   private Map<String, TemplateDirectiveModel>   directives = Collections.emptyMap();
   
   @PostConstruct
@@ -25,6 +29,7 @@ public class ExtendedFreemarkerConfig extends FreemarkerConfig {
     if( ! records.isEmpty() ) {
       directives = new HashMap<>();
       records.stream().forEach( $ -> directives.put( $.getName(), $.getTemplateModel() ) );
+      directives.forEach( (n, m) -> log.debug( "directive: {} -> {}", n, m ) );
     }
   }
 
