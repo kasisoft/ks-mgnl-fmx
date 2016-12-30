@@ -1,11 +1,15 @@
 package com.kasisoft.mgnl.fmx.freemarker;
 
+import static com.kasisoft.mgnl.fmx.internal.Messages.*;
+
 import com.kasisoft.libs.common.text.*;
 
 import com.kasisoft.libs.common.util.*;
 
 import com.kasisoft.libs.common.xml.*;
 
+import org.slf4j.*;
+import org.slf4j.Logger;
 import org.w3c.dom.*;
 import org.w3c.dom.Element;
 
@@ -21,6 +25,8 @@ import java.io.*;
  * @author daniel.kasmeroglu@kasisoft.net
  */
 public class FreemarkerXmlTranslator {
+  
+  private static final Logger log = LoggerFactory.getLogger( FreemarkerXmlTranslator.class );
 
   private static final String FMX_NAMESPACE       = "https://kasisoft.com/namespaces/fmx/0.1";
   private static final String FMX_NAMESPACE_S     = "https://kasisoft.com/namespaces/fmx/0.1/";
@@ -33,18 +39,19 @@ public class FreemarkerXmlTranslator {
   private static final String FMX_IT              = "it";
   private static final String FMX_DEPENDS         = "depends";
   private static final String FMX_DISABLE_DEPENDS = "disable-depends";
+  private static final String FMX_MODEL           = "model";
+  private static final String FMX_NAME            = "name";
+  private static final String FMX_WITH            = "with";
   
   private static final Bucket<StringFBuilder> STRINGFBUILDER = BucketFactories.newStringFBuilderBucket();
   private static final Bucket<List<Attr>>     LIST_ATTR      = BucketFactories.newArrayListBucket();
   
+  private long   counter = 0;
+  
   public String convert( String xmlInput ) {
-    return convert( new StringReader( String.format( WRAPPER, FMX_NAMESPACE, xmlInput ) ) );
+    return STRINGFBUILDER.forInstance( this::convertImpl, new StringReader( String.format( WRAPPER, FMX_NAMESPACE, xmlInput ) ) );
   }
   
-  private String convert( Reader reader ) {
-    return STRINGFBUILDER.forInstance( this::convertImpl, reader );
-  }
-
   private String convertImpl( StringFBuilder builder, Reader reader ) {
     Node          wrapper   = (Node) JAXB.unmarshal( reader, Object.class );
     List<Element> elements  = XmlFunctions.getChildElements( wrapper );
@@ -97,26 +104,44 @@ public class FreemarkerXmlTranslator {
       String       iterator        = parseSingle  ( FMX_IT              , fmxAttributes );
       List<String> depends         = parseMany    ( FMX_DEPENDS         , fmxAttributes );
       List<String> disableDepends  = parseMany    ( FMX_DISABLE_DEPENDS , fmxAttributes );
+      String       withModel       = parseSingle  ( FMX_MODEL           , fmxAttributes );
+      String       withName        = parseSingle  ( FMX_NAME            , fmxAttributes );
       
       List<Node> children = getChildren( node );
       openDepends( builder, indention, depends, disableDepends );
       openList( builder, indention, list, iterator );
       if( isFmxRelevant( node ) ) {
-        String name = node.getLocalName().replace( '-', '.' );
-        if( isEmpty( children ) ) {
-          if( node.getNodeType() == Node.TEXT_NODE ) {
-            builder.append( node.getNodeValue() );
+        String  name   = node.getLocalName().replace( '-', '.' );
+        boolean iswith = FMX_WITH.equals( name );
+        if( iswith ) {
+          if( withName == null ) {
+            withName = "model";
+          }
+          if( withModel != null ) {
+            long idx = counter++;
+            builder.appendF( "[#assign fmxOldModel%d=%s! /]\n", idx, withName );
+            builder.appendF( "[#assign %s=%s /]\n", withName, withModel );
+            serializeChildren( builder, indention, children );
+            builder.appendF( "[#assign %s=fmxOldModel%d /]\n", withName, idx );
+          } else {
+            log.warn( missing_fmx_model );
+          }
+        } else {
+          if( isEmpty( children ) ) {
+            if( node.getNodeType() == Node.TEXT_NODE ) {
+              builder.append( node.getNodeValue() );
+            } else {
+              builder.appendF( "%s[@%s", indention, name );
+              serializeAttributes( builder, standardAttributes );
+              builder.appendF( " /]\n" );
+            }
           } else {
             builder.appendF( "%s[@%s", indention, name );
             serializeAttributes( builder, standardAttributes );
-            builder.appendF( " /]\n" );
+            builder.appendF( "]" );
+            serializeChildren( builder, indention, children );
+            builder.appendF( "[/@%s]\n", name );
           }
-        } else {
-          builder.appendF( "%s[@%s", indention, name );
-          serializeAttributes( builder, standardAttributes );
-          builder.appendF( "]" );
-          serializeChildren( builder, indention, children );
-          builder.appendF( "[/@%s]\n", name );
         }
       } else {
         serializeOrdinaryNode( builder, indention, node );
