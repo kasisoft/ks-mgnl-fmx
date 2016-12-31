@@ -29,7 +29,7 @@ public class FmxResourceLoader extends ResourceTemplateLoader {
   @Override
   public Object findTemplateSource( @Nonnull String name ) throws IOException {
     FmxRecord result = null;
-    if( (name != null) && name.endsWith( SUFFIX ) ) {
+    if( name.endsWith( SUFFIX ) ) {
       Resource resource = (Resource) super.findTemplateSource( name );
       if( resource != null ) {
         result = new FmxRecord( resource, loadTranslation( resource ) );
