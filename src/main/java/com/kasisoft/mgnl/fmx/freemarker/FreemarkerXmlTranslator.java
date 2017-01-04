@@ -35,12 +35,17 @@ public class FreemarkerXmlTranslator {
   
   private static final String WRAPPER             = "<fmx:wrappingElement xmlns:fmx=\"%s\">%s</fmx:wrappingElement>";
   
+  // TODO: properly distinguish elements from attributes (incl. ns)
+  private static final String FMX_DOCTYPE         = "doctype";
   private static final String FMX_LIST            = "list";
   private static final String FMX_IT              = "it";
   private static final String FMX_DEPENDS         = "depends";
   private static final String FMX_DISABLE_DEPENDS = "disable-depends";
+  private static final String FMX_INCLUDE         = "include";
   private static final String FMX_MODEL           = "model";
   private static final String FMX_NAME            = "name";
+  private static final String FMX_PATH            = "fmx:path";
+  private static final String FMX_VALUE           = "fmx:value";
   private static final String FMX_WITH            = "with";
   
   private static final Bucket<StringFBuilder> STRINGFBUILDER = BucketFactories.newStringFBuilderBucket();
@@ -112,8 +117,7 @@ public class FreemarkerXmlTranslator {
       openList( builder, indention, list, iterator );
       if( isFmxRelevant( node ) ) {
         String  name   = node.getLocalName().replace( '-', '.' );
-        boolean iswith = FMX_WITH.equals( name );
-        if( iswith ) {
+        if( FMX_WITH.equals( name ) ) {
           if( withName == null ) {
             withName = "model";
           }
@@ -126,6 +130,12 @@ public class FreemarkerXmlTranslator {
           } else {
             log.warn( missing_fmx_model );
           }
+        } else if( FMX_INCLUDE.equals( name ) ) {
+          String path = ((Element) node).getAttribute( FMX_PATH );
+          builder.appendF( "[#include '%s' /]\n", path );
+        } else if( FMX_DOCTYPE.equals( name ) ) {
+          String value = ((Element) node).getAttribute( FMX_VALUE );
+          builder.appendF( "<!doctype %s>\n", value );
         } else {
           if( isEmpty( children ) ) {
             if( node.getNodeType() == Node.TEXT_NODE ) {

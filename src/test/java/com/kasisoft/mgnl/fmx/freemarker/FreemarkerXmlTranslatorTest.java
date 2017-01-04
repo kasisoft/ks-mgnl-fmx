@@ -23,6 +23,8 @@ public class FreemarkerXmlTranslatorTest {
     "example6",
     "example7",
     "example8",
+    "example9",
+    "example10",
   };
   
   private FreemarkerXmlTranslator translator = new FreemarkerXmlTranslator();
