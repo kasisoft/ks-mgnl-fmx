@@ -14,29 +14,18 @@ import java.util.*;
  */
 public class FreemarkerXmlTranslatorTest {
 
-  private static final String[] TESTCASES = new String[] {
-    "example1",
-    "example2",
-    "example3",
-    "example4",
-    "example5",
-    "example6",
-    "example7",
-    "example8",
-    "example9",
-    "example10",
-  };
+  private static int TESTCASES = 10;
   
   private FreemarkerXmlTranslator translator = new FreemarkerXmlTranslator();
   
   @DataProvider(name = "convertData")
   public Object[][] convertData() {
-    List<Object[]> list = new ArrayList<>( TESTCASES.length );
+    List<Object[]> list = new ArrayList<>( TESTCASES );
     ClassLoader    cl   = Thread.currentThread().getContextClassLoader();
-    for( String testcase : TESTCASES ) {
+    for( int i = 1; i <= TESTCASES; i++ ) {
       list.add( new Object[] {
-        IoFunctions.readTextFully( cl.getResource( testcase + ".fmx" ) ),
-        IoFunctions.readTextFully( cl.getResource( testcase + ".ftl" ) )
+        IoFunctions.readTextFully( cl.getResource( String.format( "example%02d.fmx", i ) ) ),
+        IoFunctions.readTextFully( cl.getResource( String.format( "example%02d.ftl", i ) ) )
       } );
     }
     return list.toArray( new Object[ list.size() ][2] );
