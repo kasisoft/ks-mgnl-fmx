@@ -48,6 +48,10 @@ public class FreemarkerXmlTranslator {
   private static final String FMX_VALUE           = "fmx:value";
   private static final String FMX_WITH            = "with";
   
+  private static final Set<String> IGNORE = new HashSet<>( Arrays.asList(
+    FMX_IT, FMX_LIST, FMX_DEPENDS, FMX_DISABLE_DEPENDS, FMX_MODEL, FMX_NAME, "path", "value"
+  ) );
+  
   private static final Bucket<StringFBuilder> STRINGFBUILDER = BucketFactories.newStringFBuilderBucket();
   private static final Bucket<List<Attr>>     LIST_ATTR      = BucketFactories.newArrayListBucket();
   
@@ -142,12 +146,14 @@ public class FreemarkerXmlTranslator {
               builder.append( node.getNodeValue() );
             } else {
               builder.appendF( "%s[@%s", indention, name );
-              serializeAttributes( builder, standardAttributes );
+              serializeAttributes( builder, standardAttributes, false );
+              serializeAttributes( builder, fmxAttributes, true );
               builder.appendF( " /]\n" );
             }
           } else {
             builder.appendF( "%s[@%s", indention, name );
-            serializeAttributes( builder, standardAttributes );
+            serializeAttributes( builder, standardAttributes, false );
+            serializeAttributes( builder, fmxAttributes, true );
             builder.appendF( "]" );
             serializeChildren( builder, indention, children );
             builder.appendF( "[/@%s]\n", name );
@@ -204,25 +210,29 @@ public class FreemarkerXmlTranslator {
   private void serializeOrdinaryNode( StringFBuilder builder, StringBuilder indention, Node node ) {
     List<Node> children           = getChildren( node );
     List<Attr> standardAttributes = LIST_ATTR.allocate();
+    List<Attr> fmxAttributes      = LIST_ATTR.allocate();
     try {
-      collectAttributes( node.getAttributes(), standardAttributes, null );
+      collectAttributes( node.getAttributes(), standardAttributes, fmxAttributes );
       if( isEmpty( children ) ) {
         if( node.getNodeType() == Node.TEXT_NODE ) {
           builder.append( node.getNodeValue() );
         } else {
           builder.appendF( "%s<%s", indention, node.getNodeName() );
-          serializeAttributes( builder, standardAttributes );
+          serializeAttributes( builder, standardAttributes, false );
+          serializeAttributes( builder, fmxAttributes, true );
           builder.appendF( " />\n" );
         }
       } else {
         builder.appendF( "%s<%s", indention, node.getNodeName() );
-        serializeAttributes( builder, standardAttributes );
+        serializeAttributes( builder, standardAttributes, false );
+        serializeAttributes( builder, fmxAttributes, true );
         builder.appendF( ">" );
         serializeChildren( builder, indention, children );
         builder.appendF( "</%s>\n", node.getNodeName() );
       }
     } finally {
       LIST_ATTR.free( standardAttributes );
+      LIST_ATTR.free( fmxAttributes      );
     }
   }
   
@@ -259,14 +269,21 @@ public class FreemarkerXmlTranslator {
     Collections.sort( normal, this::compareAttributes );
   }
   
-  private void serializeAttributes( StringFBuilder builder, List<Attr> attributes ) {
+  private void serializeAttributes( StringFBuilder builder, List<Attr> attributes, boolean test ) {
     if( ! isEmpty( attributes ) ) {
-      attributes.forEach( $ -> serializeAttribute( builder, $ ) );
+      attributes.forEach( $ -> serializeAttribute( builder, $, test ) );
     }
   }
   
-  private void serializeAttribute( StringFBuilder builder, Attr attr ) {
-    builder.appendF( " %s=\"%s\"", attr.getNodeName(), attr.getNodeValue() );
+  private void serializeAttribute( StringFBuilder builder, Attr attr, boolean test ) {
+    if( test ) {
+      String name = attr.getLocalName();
+      if( ! IGNORE.contains( name ) ) {
+        builder.appendF( "[#if (%s)?has_content] %s=\"${%s}\"[/#if]", attr.getNodeValue(), name, attr.getNodeValue() );
+      }
+    } else {
+      builder.appendF( " %s=\"%s\"", attr.getNodeName(), attr.getNodeValue() );
+    }
   }
   
   private int compareAttributes( Attr attr1, Attr attr2 ) {
