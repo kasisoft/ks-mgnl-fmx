@@ -47,9 +47,10 @@ public class FreemarkerXmlTranslator {
   private static final String FMX_PATH            = "fmx:path";
   private static final String FMX_VALUE           = "fmx:value";
   private static final String FMX_WITH            = "with";
+  private static final String FMX_WRAP            = "wrap";
   
   private static final Set<String> IGNORE = new HashSet<>( Arrays.asList(
-    FMX_IT, FMX_LIST, FMX_DEPENDS, FMX_DISABLE_DEPENDS, FMX_MODEL, FMX_NAME, "path", "value"
+    FMX_IT, FMX_LIST, FMX_DEPENDS, FMX_DISABLE_DEPENDS, FMX_MODEL, FMX_NAME, FMX_WRAP, "path", "value"
   ) );
   
   private static final Bucket<StringFBuilder> STRINGFBUILDER = BucketFactories.newStringFBuilderBucket();
@@ -111,29 +112,22 @@ public class FreemarkerXmlTranslator {
       
       String       list            = parseSingle  ( FMX_LIST            , fmxAttributes );
       String       iterator        = parseSingle  ( FMX_IT              , fmxAttributes );
+      String       wrap            = parseSingle  ( FMX_WRAP            , fmxAttributes );
       List<String> depends         = parseMany    ( FMX_DEPENDS         , fmxAttributes );
       List<String> disableDepends  = parseMany    ( FMX_DISABLE_DEPENDS , fmxAttributes );
       String       withModel       = parseSingle  ( FMX_MODEL           , fmxAttributes );
       String       withName        = parseSingle  ( FMX_NAME            , fmxAttributes );
       
       List<Node> children = getChildren( node );
+      if( wrap != null ) {
+        builder.appendF( "%s[#if %s]\n", indention, wrap );
+      }
       openDepends( builder, indention, depends, disableDepends );
       openList( builder, indention, list, iterator );
       if( isFmxRelevant( node ) ) {
         String  name   = node.getLocalName().replace( '-', '.' );
         if( FMX_WITH.equals( name ) ) {
-          if( withName == null ) {
-            withName = "model";
-          }
-          if( withModel != null ) {
-            long idx = counter++;
-            builder.appendF( "[#assign fmxOldModel%d=%s! /]\n", idx, withName );
-            builder.appendF( "[#assign %s=%s /]\n", withName, withModel );
-            serializeChildren( builder, indention, children );
-            builder.appendF( "[#assign %s=fmxOldModel%d /]\n", withName, idx );
-          } else {
-            log.warn( missing_fmx_model );
-          }
+          fmxWith( builder, indention, withModel, withName, children );
         } else if( FMX_INCLUDE.equals( name ) ) {
           String path = ((Element) node).getAttribute( FMX_PATH );
           builder.appendF( "[#include '%s' /]\n", path );
@@ -141,35 +135,61 @@ public class FreemarkerXmlTranslator {
           String value = ((Element) node).getAttribute( FMX_VALUE );
           builder.appendF( "<!doctype %s>\n", value );
         } else {
-          if( isEmpty( children ) ) {
-            if( node.getNodeType() == Node.TEXT_NODE ) {
-              builder.append( node.getNodeValue() );
-            } else {
-              builder.appendF( "%s[@%s", indention, name );
-              serializeAttributes( builder, standardAttributes, false );
-              serializeAttributes( builder, fmxAttributes, true );
-              builder.appendF( " /]\n" );
-            }
-          } else {
-            builder.appendF( "%s[@%s", indention, name );
-            serializeAttributes( builder, standardAttributes, false );
-            serializeAttributes( builder, fmxAttributes, true );
-            builder.appendF( "]" );
-            serializeChildren( builder, indention, children );
-            builder.appendF( "[/@%s]\n", name );
-          }
+          fmxDefault( builder, indention, node, standardAttributes, fmxAttributes, children, name );
         }
       } else {
         serializeOrdinaryNode( builder, indention, node );
       }
       closeFtlTag( builder, indention, "list", list );
       closeFtlTag( builder, indention, "if", depends );
+      
+      if( wrap != null ) {
+        builder.appendF( "%s[#else]\n", indention );
+        serializeChildren( builder, indention, children );
+        builder.appendF( "%s[/#if]\n", indention );
+      }
+      
 
     } finally {
       LIST_ATTR.free( standardAttributes );
       LIST_ATTR.free( fmxAttributes      );
     }
     
+  }
+
+  private void fmxDefault( StringFBuilder builder, StringBuilder indention, Node node, List<Attr> standardAttributes, List<Attr> fmxAttributes, List<Node> children, String name ) {
+    if( isEmpty( children ) ) {
+      if( node.getNodeType() == Node.TEXT_NODE ) {
+        builder.append( node.getNodeValue() );
+      } else {
+        builder.appendF( "%s[@%s", indention, name );
+        serializeAttributes( builder, standardAttributes, false );
+        serializeAttributes( builder, fmxAttributes, true );
+        builder.appendF( " /]\n" );
+      }
+    } else {
+      builder.appendF( "%s[@%s", indention, name );
+      serializeAttributes( builder, standardAttributes, false );
+      serializeAttributes( builder, fmxAttributes, true );
+      builder.appendF( "]" );
+      serializeChildren( builder, indention, children );
+      builder.appendF( "[/@%s]\n", name );
+    }
+  }
+
+  private void fmxWith( StringFBuilder builder, StringBuilder indention, String withModel, String withName, List<Node> children ) {
+    if( withName == null ) {
+      withName = "model";
+    }
+    if( withModel != null ) {
+      long idx = counter++;
+      builder.appendF( "[#assign fmxOldModel%d=%s! /]\n", idx, withName );
+      builder.appendF( "[#assign %s=%s /]\n", withName, withModel );
+      serializeChildren( builder, indention, children );
+      builder.appendF( "[#assign %s=fmxOldModel%d /]\n", withName, idx );
+    } else {
+      log.warn( missing_fmx_model );
+    }
   }
 
   private void closeFtlTag( StringFBuilder builder, StringBuilder indention, String tag, Object test ) {

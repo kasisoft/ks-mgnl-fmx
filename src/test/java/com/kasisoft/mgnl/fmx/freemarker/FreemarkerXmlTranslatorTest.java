@@ -14,7 +14,7 @@ import java.util.*;
  */
 public class FreemarkerXmlTranslatorTest {
 
-  private static int TESTCASES = 10;
+  private static int TESTCASES = 11;
   
   private FreemarkerXmlTranslator translator = new FreemarkerXmlTranslator();
   
