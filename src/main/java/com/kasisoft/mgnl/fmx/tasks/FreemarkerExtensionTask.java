@@ -22,7 +22,7 @@ public class FreemarkerExtensionTask extends JcrConfigurationTask {
   
   private TreeBuilder extendedConfig() {
     return new TreeBuilder()
-      .sNode( "server/rendering/freemarker" )
+      .sContentNode( "server/rendering/freemarker" )
         .clazz( ExtendedFreemarkerConfig.class )
       .sEnd()
       ;
@@ -30,7 +30,7 @@ public class FreemarkerExtensionTask extends JcrConfigurationTask {
   
   private TreeBuilder ftxLoader() {
     return new TreeBuilder()
-      .sNode( PATH_FMX )
+      .sContentNode( PATH_FMX )
         .clazz( FmxResourceLoader.class )
       .sEnd()
       ;
@@ -38,7 +38,7 @@ public class FreemarkerExtensionTask extends JcrConfigurationTask {
 
   private TreeBuilder sharedVariables() {
     return new TreeBuilder()
-      .sNode( "server/rendering/freemarker/sharedVariables" )
+      .sContentNode( "server/rendering/freemarker/sharedVariables" )
       .sEnd()
       ;
   }
