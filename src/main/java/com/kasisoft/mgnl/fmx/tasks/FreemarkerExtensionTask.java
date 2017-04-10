@@ -2,6 +2,7 @@ package com.kasisoft.mgnl.fmx.tasks;
 
 import info.magnolia.module.delta.*;
 
+import com.kasisoft.libs.fmx.*;
 import com.kasisoft.mgnl.fmx.freemarker.*;
 import com.kasisoft.mgnl.versionhandler.*;
 
@@ -31,7 +32,7 @@ public class FreemarkerExtensionTask extends JcrConfigurationTask {
   private TreeBuilder ftxLoader() {
     return new TreeBuilder()
       .sContentNode( PATH_FMX )
-        .clazz( FmxResourceLoader.class )
+        .clazz( FmxTemplateLoader.class )
       .sEnd()
       ;
   }

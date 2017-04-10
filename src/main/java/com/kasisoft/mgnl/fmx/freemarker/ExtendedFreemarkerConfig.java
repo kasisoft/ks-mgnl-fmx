@@ -2,11 +2,15 @@ package com.kasisoft.mgnl.fmx.freemarker;
 
 import com.kasisoft.libs.common.spi.*;
 
-import org.slf4j.*;
-
 import javax.annotation.*;
 
 import java.util.*;
+
+import lombok.extern.slf4j.*;
+
+import lombok.experimental.*;
+
+import lombok.*;
 
 import freemarker.template.*;
 import info.magnolia.freemarker.*;
@@ -14,11 +18,11 @@ import info.magnolia.freemarker.*;
 /**
  * @author daniel.kasmeroglu@kasisoft.net
  */
+@Slf4j
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class ExtendedFreemarkerConfig extends FreemarkerConfig {
 
-  private static final Logger log = LoggerFactory.getLogger( ExtendedFreemarkerConfig.class );
-  
-  private Map<String, TemplateDirectiveModel>   directives = Collections.emptyMap();
+  Map<String, TemplateDirectiveModel>   directives = Collections.emptyMap();
   
   @PostConstruct
   public void init() {

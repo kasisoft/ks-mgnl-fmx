@@ -67,6 +67,7 @@
     <version-hamcrest>1.3</version-hamcrest>
     <version-javax-inject>1</version-javax-inject>
     <version-kcl>2.7</version-kcl>
+    <version-fmx>0.1</version-fmx>
     <version-lombok>1.16.16</version-lombok>
     <version-magnolia>5.4.9</version-magnolia>
     <version-mgnl-versionhandler>0.1-SNAPSHOT</version-mgnl-versionhandler>
@@ -103,6 +104,11 @@
         <scope>provided</scope>
       </dependency>
 
+      <dependency>  
+        <groupId>com.kasisoft</groupId>
+        <artifactId>com.kasisoft.libs.fmx</artifactId>
+        <version>${version-fmx}</version>
+      </dependency>
 
       <dependency>
         <groupId>javax.inject</groupId>
@@ -163,6 +169,11 @@
     <dependency>
       <groupId>info.magnolia</groupId>
       <artifactId>magnolia-core</artifactId>
+    </dependency>
+    
+    <dependency>  
+      <groupId>com.kasisoft</groupId>
+      <artifactId>com.kasisoft.libs.fmx</artifactId>
     </dependency>
     
     <dependency>
