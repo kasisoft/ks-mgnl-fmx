@@ -7,8 +7,14 @@ import com.kasisoft.libs.common.i18n.*;
  */
 public class Messages {
 
-  @I18N("Missing 'fmx:model' attribute for 'fmx:with' element !")
-  public static String    missing_fmx_model;
+  @I18N("directive: %s -> %s")
+  public static I18NFormatter     debug_directive;
+  
+  @I18N("installing freemarker fmx extension")
+  public static String            install_freemarker_extension;
+
+  @I18N("the fmx template loader will be positioned as the first one")
+  public static String            install_positioning_loader;
   
   static {
     I18NSupport.initialize( Messages.class );

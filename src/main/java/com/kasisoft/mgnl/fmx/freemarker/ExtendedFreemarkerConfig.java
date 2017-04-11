@@ -1,5 +1,7 @@
 package com.kasisoft.mgnl.fmx.freemarker;
 
+import static com.kasisoft.mgnl.fmx.internal.Messages.*;
+
 import com.kasisoft.libs.common.spi.*;
 
 import javax.annotation.*;
@@ -33,7 +35,7 @@ public class ExtendedFreemarkerConfig extends FreemarkerConfig {
     if( ! records.isEmpty() ) {
       directives = new HashMap<>();
       records.stream().forEach( $ -> directives.put( $.getName(), $.getTemplateModel() ) );
-      directives.forEach( (n, m) -> log.debug( "directive: {} -> {}", n, m ) );
+      directives.forEach( (n, m) -> log.debug( debug_directive.format( n, m ) ) );
     }
   }
 
