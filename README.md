@@ -1,8 +1,9 @@
 Purpose
 =======
 
-This magnolia module provides the integration for the ''com.kasisoft.libs.fmx'' library. It registers an additional
+This magnolia module provides the integration for the _com.kasisoft.libs.fmx_ library. It registers an additional
 resource loader which enables FMX templates.
+Furthermore it's possible to easily add additional directives.
 
 
 Contact
