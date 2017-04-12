@@ -9,7 +9,7 @@ import com.kasisoft.mgnl.versionhandler.*;
 public class FmxVersionHandler extends KsModuleVersionHandler {
 
   public FmxVersionHandler() {
-    register( 1, new FreemarkerExtensionTask() );
+    register( 1, new FreemarkerExtension() );
   }
-  
+
 } /* ENDCLASS */

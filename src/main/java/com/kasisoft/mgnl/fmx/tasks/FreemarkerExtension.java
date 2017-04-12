@@ -13,7 +13,7 @@ import java.util.*;
 /**
  * @author daniel.kasmeroglu@kasisoft.net
  */
-public class FreemarkerExtensionTask implements TreeBuilderProvider {
+public class FreemarkerExtension implements TreeBuilderProvider {
 
   private static final String PATH_FMX = "server/rendering/freemarker/templateLoaders/fmx";
 
