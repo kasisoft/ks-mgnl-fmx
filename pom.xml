@@ -50,7 +50,7 @@
     <version-fmx>0.1</version-fmx>
     <version-lombok>1.16.16</version-lombok>
     <version-magnolia>5.4.9</version-magnolia>
-    <version-mgnl-versionhandler>0.1</version-mgnl-versionhandler>
+    <version-mgnl-versionhandler>0.2</version-mgnl-versionhandler>
     <version-testng>6.9.4</version-testng>
     
     <plugin-version-cobertura-maven>2.7</plugin-version-cobertura-maven>
