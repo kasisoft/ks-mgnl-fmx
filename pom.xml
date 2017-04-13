@@ -6,12 +6,13 @@
   <parent>
     <groupId>com.kasisoft</groupId>
     <artifactId>com.kasisoft.libs.parent-oss</artifactId>
-    <version>0.1-SNAPSHOT</version>
+    <version>0.1</version>
   </parent>  
   
   <packaging>jar</packaging>
   <groupId>com.kasisoft.mgnl</groupId>
   <artifactId>com.kasisoft.mgnl.fmx</artifactId>
+  <version>0.1-SNAPSHOT</version>
   <name>MGNL :: Freemarker Xml Extension</name>
   <url>https://kasisoft.com/bitbucket/projects/MGNL/repos/com.kasisoft.mgnl.fmx</url>
   <description>Simple extension for Freemarker templates allowing to make use of an XML like markup.</description>
