@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE module SYSTEM "module.dtd">
 <module>
-  <name>mgnl-fmx</name>
-  <displayName>Fmx</displayName>
-  <description>Fmx</description>
+  <name>${project.artifactId}</name>
+  <displayName>${project.artifactId}</displayName>
+  <description>${project.artifactId}</description>
   <versionHandler>com.kasisoft.mgnl.fmx.internal.FmxVersionHandler</versionHandler>
   <version>${project.version}</version>
 </module>
