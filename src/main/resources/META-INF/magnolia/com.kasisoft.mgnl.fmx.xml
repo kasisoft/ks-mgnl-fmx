@@ -1,9 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE module SYSTEM "module.dtd">
 <module>
+
   <name>${project.artifactId}</name>
   <displayName>${project.artifactId}</displayName>
   <description>${project.artifactId}</description>
   <versionHandler>com.kasisoft.mgnl.fmx.internal.FmxVersionHandler</versionHandler>
   <version>${project.version}</version>
+  
+  <dependencies>
+  
+    <!--
+    NOTE: required as we want to install the fmx template resource loader as the first candidate.
+          this is realized by enforcing it's position, so the default freemarker resource loader
+          must be installed first.
+    -->
+    <dependency>
+      <name>core</name>
+      <version>${version-magnolia}/*</version>
+    </dependency>
+
+  </dependencies>
+  
 </module>
