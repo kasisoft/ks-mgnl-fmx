@@ -4,7 +4,6 @@ import static com.kasisoft.mgnl.fmx.internal.Messages.*;
 
 import info.magnolia.module.delta.*;
 
-import com.kasisoft.libs.fmx.*;
 import com.kasisoft.mgnl.fmx.freemarker.*;
 import com.kasisoft.mgnl.versionhandler.*;
 
@@ -33,7 +32,7 @@ public class FreemarkerExtension implements TreeBuilderProvider {
       
       // add the fmx template loader
       .sContentNode( PATH_FMX )
-        .clazz( FmxTemplateLoader.class )
+        .clazz( MgnlFmxTemplateLoader.class )
       .sEnd()
       
       // setup a node for shared variables

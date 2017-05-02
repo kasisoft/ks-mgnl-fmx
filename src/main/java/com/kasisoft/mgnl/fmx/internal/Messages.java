@@ -10,6 +10,9 @@ public class Messages {
   @I18N("directive: %s -> %s")
   public static I18NFormatter     debug_directive;
   
+  @I18N("cannot decide which TemplateLoader has be used for FMX: '%s' or '%s'")
+  public static I18NFormatter     error_conflicting_loaders;
+  
   @I18N("installing freemarker fmx extension")
   public static String            install_freemarker_extension;
 
