@@ -16,7 +16,7 @@ Requirements
 ============
 
  * Java 8
- * Magnolia 5.5.3
+ * Magnolia 5.5.6
 
 
 Jira
