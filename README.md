@@ -1,45 +1,45 @@
-Purpose
-=======
+# Purpose
 
 This magnolia module provides the integration for the _com.kasisoft.libs.fmx_ library. It registers an additional
 resource loader which enables FMX templates.
 Furthermore it's possible to easily add additional directives.
 
 
-Contact
-=======
+# Infos
 
-* daniel.kasmeroglu@kasisoft.net
-
-
-Requirements
-============
-
- * Java 8
- * Magnolia 5.5.6
+* [eMail: daniel.kasmeroglu@kasisoft.net](mailto:daniel.kasmeroglu@kasisoft.net)
+* [Jira](https://kasisoft.com/jira/projects/MGNLFMX)
+* [Jenkins](https://kasisoft.com/jenkins/job/mgnl.com.kasisoft.mgnl.fmx)
+* [GIT](https://kasisoft.com/bitbucket/projects/MGNL/repos/com.kasisoft.mgnl.fmx)
 
 
-Jira
-====
+# Development Setup
 
-* https://kasisoft.com/jira/projects/MGNLFMX/issues
+I assume that you're familiar with Maven. If not I suggest to visit the following page:
+
+* https://maven.apache.org/
 
 
-Maven
-=====
+## Requirements
 
-Release
--------
+* Java 8
+* Magnolia 5.5.6
+
+
+## Maven
+
+### Releases
 
      <dependency>
          <groupId>com.kasisoft.mgnl</groupId>
          <artifactId>com.kasisoft.mgnl.fmx</artifactId>
          <version>0.1</version>
      </dependency>
-     
-     
-Snapshot
---------
+
+
+### Snapshots
+
+Snapshots can be used while accessing a dedicated maven repository. Your POM needs the following settings:
 
      <dependency>
          <groupId>com.kasisoft.mgnl</groupId>
@@ -60,9 +60,9 @@ Snapshot
          </repository>
      </repositories>
      
+     
 
-License
-=======
+# License
 
 MIT License
 
