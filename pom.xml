@@ -12,11 +12,11 @@
   <packaging>jar</packaging>
   
   <groupId>com.kasisoft.mgnl</groupId>
-  <artifactId>com.kasisoft.mgnl.fmx</artifactId>
-  <version>0.2-SNAPSHOT</version>
+  <artifactId>ks-mgnl-fmx</artifactId>
+  <version>0.3-SNAPSHOT</version>
 
   <name>MGNL :: Freemarker Xml Extension</name>
-  <url>https://kasisoft.com/bitbucket/projects/MGNL/repos/com.kasisoft.mgnl.fmx</url>
+  <url>https://kasisoft.com/bitbucket/projects/MGNL/repos/ks-mgnl-fmx</url>
   <description>Simple extension for Freemarker templates allowing to make use of an XML like markup.</description>
   
   <licenses>
@@ -32,9 +32,9 @@
   </organization>
   
   <scm>
-    <url>https://kasisoft.com/bitbucket/projects/MGNL/repos/com.kasisoft.mgnl.fmx</url>
-    <connection>scm:git:ssh://kasisoft.com:7999/mgnl/com.kasisoft.mgnl.fmx.git</connection>
-    <developerConnection>scm:git:ssh://kasisoft.com:7999/mgnl/com.kasisoft.mgnl.fmx.git</developerConnection>
+    <url>https://kasisoft.com/bitbucket/projects/MGNL/repos/ks-mgnl-fmx</url>
+    <connection>scm:git:ssh://kasisoft.com:7999/mgnl/ks-mgnl-fmx.git</connection>
+    <developerConnection>scm:git:ssh://kasisoft.com:7999/mgnl/ks-mgnl-fmx.git</developerConnection>
     <tag>HEAD</tag>
   </scm>
   
@@ -45,7 +45,7 @@
   
   <ciManagement>
     <system>Jenkins</system>
-    <url>https://kasisoft.com/jenkins/job/mgnl.com.kasisoft.mgnl.fmx/</url>
+    <url>https://kasisoft.com/jenkins/job/mgnl.ks-mgnl-fmx/</url>
   </ciManagement>
   
   <developers>
@@ -62,7 +62,7 @@
     <version-kcl>2.8</version-kcl>
     <version-fmx>0.3-SNAPSHOT</version-fmx>
     <version-magnolia>5.5.6-SNAPSHOT</version-magnolia>
-    <version-mgnl-versionhandler>0.3-SNAPSHOT</version-mgnl-versionhandler>
+    <version-mgnl-versionhandler>0.4-SNAPSHOT</version-mgnl-versionhandler>
     
     <!-- versioning: plugins -->
     <plugin-version-jacoco>0.7.9</plugin-version-jacoco>
@@ -115,7 +115,7 @@
     </dependency>
     <dependency>
       <groupId>com.kasisoft.mgnl</groupId>
-      <artifactId>com.kasisoft.mgnl.versionhandler</artifactId>
+      <artifactId>ks-mgnl-versionhandler</artifactId>
       <version>${version-mgnl-versionhandler}</version>
     </dependency>
     <dependency>

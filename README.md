@@ -9,8 +9,8 @@ Furthermore it's possible to easily add additional directives.
 
 * [eMail: daniel.kasmeroglu@kasisoft.net](mailto:daniel.kasmeroglu@kasisoft.net)
 * [Jira](https://kasisoft.com/jira/projects/MGNLFMX)
-* [Jenkins](https://kasisoft.com/jenkins/job/mgnl.com.kasisoft.mgnl.fmx)
-* [GIT](https://kasisoft.com/bitbucket/projects/MGNL/repos/com.kasisoft.mgnl.fmx)
+* [Jenkins](https://kasisoft.com/jenkins/job/mgnl.ks-mgnl-fmx)
+* [GIT](https://kasisoft.com/bitbucket/projects/MGNL/repos/ks-mgnl-fmx)
 
 
 # Development Setup
@@ -32,8 +32,8 @@ I assume that you're familiar with Maven. If not I suggest to visit the followin
 
      <dependency>
          <groupId>com.kasisoft.mgnl</groupId>
-         <artifactId>com.kasisoft.mgnl.fmx</artifactId>
-         <version>0.1</version>
+         <artifactId>ks-mgnl-fmx</artifactId>
+         <version>0.2</version>
      </dependency>
 
 
@@ -43,7 +43,7 @@ Snapshots can be used while accessing a dedicated maven repository. Your POM nee
 
      <dependency>
          <groupId>com.kasisoft.mgnl</groupId>
-         <artifactId>com.kasisoft.mgnl.fmx</artifactId>
+         <artifactId>ks-mgnl-fmx</artifactId>
          <version>0.2-SNAPSHOT</version>
      </dependency>
      
