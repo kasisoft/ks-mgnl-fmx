@@ -4,6 +4,10 @@ import static com.kasisoft.mgnl.fmx.internal.Messages.*;
 
 import com.kasisoft.libs.fmx.*;
 
+import java.util.function.*;
+
+import java.util.*;
+
 import java.io.*;
 
 import lombok.extern.slf4j.*;
@@ -24,7 +28,19 @@ import info.magnolia.objectfactory.*;
 public class MgnlFmxTemplateLoader extends FmxTemplateLoader {
 
   public MgnlFmxTemplateLoader() {
-    super( new DefaultLoader(), null, MgnlFmxTemplateLoader::transformDirective );
+    super( new DefaultLoader(), null, MgnlFmxTemplateLoader::transformDirective, getAttributeMappers() );
+  }
+  
+  private static Map<String, BiFunction<String, String, String>> getAttributeMappers() {
+    Map<String, BiFunction<String, String, String>> result = new HashMap<>();
+    result.put( "cms.area", MgnlFmxTemplateLoader::mapCmsArea );
+    return result;
+  }
+  
+  private static String mapCmsArea( String attrLocalName, String value ) {
+    // we don't want to use inner quotes, so instead of <fmx:cms-area name="'main'"/> we can write
+    // <fmx:cms-area name="main"/> which looks much better.
+    return String.format( "\"%s\"", value );
   }
   
   private static String transformDirective( String name ) {
