@@ -33,6 +33,7 @@ public class FreemarkerExtension implements TreeBuilderProvider {
       // add the fmx template loader
       .sContentNode( PATH_FMX )
         .clazz( MgnlFmxTemplateLoader.class )
+        .property( "debug", false )
       .sEnd()
       
       // setup a node for shared variables
