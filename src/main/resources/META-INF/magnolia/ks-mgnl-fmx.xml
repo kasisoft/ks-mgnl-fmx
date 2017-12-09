@@ -8,6 +8,14 @@
   <versionHandler>com.kasisoft.mgnl.fmx.internal.FmxVersionHandler</versionHandler>
   <version>${project.version}</version>
   
+  <components>
+    <id>main</id>
+    <component>
+      <type>com.kasisoft.mgnl.fmx.freemarker.FmxMgnlDirectives</type>
+      <implementation>com.kasisoft.mgnl.fmx.freemarker.FmxMgnlDirectives</implementation>
+    </component>
+  </components>
+  
   <dependencies>
   
     <!--
