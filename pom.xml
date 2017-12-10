@@ -14,7 +14,7 @@
   
   <groupId>com.kasisoft.mgnl</groupId>
   <artifactId>ks-mgnl-fmx</artifactId>
-  <version>0.4-SNAPSHOT</version>
+  <version>0.4</version>
 
   <name>MGNL :: Freemarker Xml Extension</name>
   <url>https://kasisoft.com/bitbucket/projects/MGNL/repos/ks-mgnl-fmx</url>
