@@ -12,8 +12,8 @@ public class FmxVersionHandler extends KsModuleVersionHandler {
 
   public FmxVersionHandler() {
     register( 1, new FreemarkerExtension() );
-    register( 2, new KsSetPropertyTask( "/modules/rendering/renderers/freemarker/contextAttributes/fmx@componentClass", FmxMgnlDirectives.class.getName() ) );
-    register( 3, new KsSetPropertyTask( "/modules/rendering/renderers/freemarker/contextAttributes/fmx@name", "fmx" ) );
+    register( 2, new KsSetPropertyTask( "/modules/rendering/renderers/freemarker/contextAttributes/fmx@componentClass", FmxMgnlDirectives.class.getName() ).createPath() );
+    register( 3, new KsSetPropertyTask( "/modules/rendering/renderers/freemarker/contextAttributes/fmx@name", "fmx" ).createPath() );
   }
 
 } /* ENDCLASS */
