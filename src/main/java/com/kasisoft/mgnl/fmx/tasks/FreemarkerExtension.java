@@ -40,6 +40,11 @@ public class FreemarkerExtension implements TreeBuilderProvider {
       .sContentNode( "server/rendering/freemarker/sharedVariables" )
       .sEnd()
       
+      .sContentNode( "modules/rendering/renderers/freemarker/contextAttributes/fmx" )
+        .property( "componentClass", FmxMgnlDirectives.class.getName() )
+        .property( "name", "fmx" )
+      .sEnd()
+      
       ;
   }
 
