@@ -25,7 +25,12 @@
     -->
     <dependency>
       <name>core</name>
-      <version>${version-magnolia}/*</version>
+      <version>${version-magnolia-decl}/*</version>
+    </dependency>
+    
+    <dependency>
+      <name>rendering</name>
+      <version>${version-magnolia-decl}/*</version>
     </dependency>
 
   </dependencies>

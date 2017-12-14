@@ -63,6 +63,7 @@
     <version-kcl>2.9</version-kcl>
     <version-fmx>0.4</version-fmx>
     <version-magnolia>5.6-1</version-magnolia>
+    <version-magnolia-decl>5.6</version-magnolia-decl>
     <version-mgnl-versionhandler>0.4</version-mgnl-versionhandler>
     
     <!-- versioning: plugins -->
