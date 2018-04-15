@@ -62,9 +62,9 @@
     <!-- versioning: dependencies -->
     <version-kcl>2.9</version-kcl>
     <version-fmx>0.4</version-fmx>
-    <version-magnolia>5.6-2</version-magnolia>
+    <version-magnolia>5.6-3</version-magnolia>
     <version-magnolia-decl>5.6</version-magnolia-decl>
-    <version-mgnl-versionhandler>0.6-SNAPSHOT</version-mgnl-versionhandler>
+    <version-mgnl-versionhandler>0.6</version-mgnl-versionhandler>
     
     <!-- versioning: plugins -->
     <plugin-version-jacoco>0.7.9</plugin-version-jacoco>
