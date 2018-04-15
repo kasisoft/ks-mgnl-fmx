@@ -17,7 +17,7 @@
   <version>0.7-SNAPSHOT</version>
 
   <name>MGNL :: Freemarker Xml Extension</name>
-  <url>https://kasisoft.com/bitbucket/projects/MGNL/repos/ks-mgnl-fmx</url>
+  <url>https://github.com/costamojan/ks-mgnl-fmx.git</url>
   <description>Simple extension for Freemarker templates allowing to make use of an XML like markup.</description>
   
   <licenses>
@@ -33,9 +33,9 @@
   </organization>
   
   <scm>
-    <url>https://kasisoft.com/bitbucket/projects/MGNL/repos/ks-mgnl-fmx</url>
-    <connection>scm:git:ssh://kasisoft.com:7999/mgnl/ks-mgnl-fmx.git</connection>
-    <developerConnection>scm:git:ssh://kasisoft.com:7999/mgnl/ks-mgnl-fmx.git</developerConnection>
+    <url>https://github.com/costamojan/ks-mgnl-fmx.git</url>
+    <connection>scm:git@github.com:costamojan/ks-mgnl-fmx.git</connection>
+    <developerConnection>scm:git@github.com:costamojan/ks-mgnl-fmx.git</developerConnection>
     <tag>HEAD</tag>
   </scm>
   
