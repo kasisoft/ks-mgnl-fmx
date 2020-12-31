@@ -7,10 +7,9 @@ Furthermore it's possible to easily add additional directives.
 
 # Infos
 
-* [eMail: daniel.kasmeroglu@kasisoft.net](mailto:daniel.kasmeroglu@kasisoft.net)
-* [Jira](https://kasisoft.com/jira/projects/MGNLFMX)
-* [Jenkins](https://kasisoft.com/jenkins/job/mgnl.ks-mgnl-fmx)
-* [GIT](https://kasisoft.com/bitbucket/projects/MGNL/repos/ks-mgnl-fmx)
+* [eMail: daniel.kasmeroglu@kasisoft.com](mailto:daniel.kasmeroglu@kasisoft.com)
+* [Issues](https://github.com/kasisoft/ks-mgnl-fmx/issues)
+* [GIT](https://github.com/kasisoft/ks-mgnl-fmx)
 
 
 # Development Setup
@@ -35,32 +34,7 @@ I assume that you're familiar with Maven. If not I suggest to visit the followin
          <artifactId>ks-mgnl-fmx</artifactId>
          <version>0.8</version>
      </dependency>
-
-
-### Snapshots
-
-Snapshots can be used while accessing a dedicated maven repository. Your POM needs the following settings:
-
-     <dependency>
-         <groupId>com.kasisoft.mgnl</groupId>
-         <artifactId>ks-mgnl-fmx</artifactId>
-         <version>0.9-SNAPSHOT</version>
-     </dependency>
-     
-     <repositories>
-         <repository>
-             <id>libs-kasisoft</id>
-             <url>https://kasisoft.com/artifactory/libs-kasisoft</url>
-             <releases>
-                 <enabled>true</enabled>
-             </releases>
-             <snapshots>
-                 <enabled>true</enabled>
-             </snapshots>
-         </repository>
-     </repositories>
-     
-     
+    
 
 # License
 
