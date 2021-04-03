@@ -1,16 +1,10 @@
 package com.kasisoft.mgnl.fmx.freemarker;
 
-import static com.kasisoft.mgnl.fmx.internal.Messages.*;
-
 import info.magnolia.freemarker.*;
-
-import com.kasisoft.libs.common.spi.*;
 
 import javax.annotation.*;
 
 import java.util.*;
-
-import lombok.extern.log4j.*;
 
 import lombok.experimental.*;
 
@@ -21,14 +15,13 @@ import freemarker.template.*;
 /**
  * @author daniel.kasmeroglu@kasisoft.net
  */
-@Log4j2
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ExtendedFreemarkerConfig extends FreemarkerConfig {
 
   Map<String, TemplateDirectiveModel>   directives = Collections.emptyMap();
   
-  @PostConstruct
   public void init() {
+    /*
     SPILoader<FreemarkerDirective> loader = SPILoader.<FreemarkerDirective>builder()
       .serviceType( FreemarkerDirective.class )
       .build();
@@ -38,6 +31,7 @@ public class ExtendedFreemarkerConfig extends FreemarkerConfig {
       records.stream().forEach( $ -> directives.put( $.getName(), $.getTemplateModel() ) );
       directives.forEach( (n, m) -> log.debug(String.format( debug_directive, n, m ) ) );
     }
+    */
   }
 
   @Override
