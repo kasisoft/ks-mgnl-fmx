@@ -23,7 +23,7 @@
   <licenses>
     <license>
       <name>MIT License</name>
-      <url>https://choosealicense.com/licenses/mit/#</url>
+      <url>https://choosealicense.com/licenses/mit</url>
     </license>
   </licenses>
   
@@ -53,13 +53,16 @@
     <developer>
       <id>costamojan</id>
       <name>Daniel Kasmeroglu</name>
-      <email>daniel.kasmeroglu@kasisoft.net</email>
+      <email>daniel.kasmeroglu@kasisoft.com</email>
     </developer>
   </developers>
   
   <properties>
   
+    <java.version>1.8</java.version>
+  
     <!-- versioning: dependencies -->
+    <lombok.version>1.18.16</lombok.version>
     <version-fmx>0.4</version-fmx>
     <version-magnolia>5.6-3</version-magnolia>
     <version-magnolia-decl>5.6</version-magnolia-decl>
@@ -68,12 +71,24 @@
     <!-- versioning: plugins -->
     <plugin-version-jacoco>0.7.9</plugin-version-jacoco>
     
+    <!-- maven settings -->
+    <maven.compiler.source>${java.version}</maven.compiler.source>
+    <maven.compiler.target>${java.version}</maven.compiler.target>
     <maven.javadoc.failOnError>false</maven.javadoc.failOnError>
+    <maven.javadoc.source>${java.version}</maven.javadoc.source>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     
   </properties>
- 
+  
   <dependencyManagement>
     <dependencies>
+    
+      <dependency>
+        <groupId>org.projectlombok</groupId>
+        <artifactId>lombok</artifactId>
+        <version>${lombok.version}</version>
+        <scope>provided</scope>
+      </dependency>
       
       <dependency>
         <groupId>com.kasisoft.mgnl</groupId>
@@ -125,7 +140,7 @@
       <artifactId>ks-mgnl-versionhandler</artifactId>
       <version>${version-mgnl-versionhandler}</version>
     </dependency>
-    
+  
     <dependency>
       <groupId>com.google.code.findbugs</groupId>
       <artifactId>annotations</artifactId>
@@ -135,12 +150,12 @@
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-api</artifactId>
     </dependency>
-    
+  
     <dependency>
       <groupId>org.hamcrest</groupId>
       <artifactId>hamcrest-all</artifactId>
     </dependency>
-    
+
     <dependency>
       <groupId>org.testng</groupId>
       <artifactId>testng</artifactId>
@@ -171,6 +186,7 @@
     
     <pluginManagement>
       <plugins>
+
         <plugin>
           <groupId>org.jacoco</groupId>
           <artifactId>jacoco-maven-plugin</artifactId>
