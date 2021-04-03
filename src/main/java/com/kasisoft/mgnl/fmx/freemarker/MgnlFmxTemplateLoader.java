@@ -2,6 +2,9 @@ package com.kasisoft.mgnl.fmx.freemarker;
 
 import static com.kasisoft.mgnl.fmx.internal.Messages.*;
 
+import info.magnolia.freemarker.*;
+import info.magnolia.objectfactory.*;
+
 import com.kasisoft.libs.fmx.*;
 
 import java.util.function.*;
@@ -10,21 +13,19 @@ import java.util.*;
 
 import java.io.*;
 
-import lombok.extern.slf4j.*;
+import lombok.extern.log4j.*;
 
 import lombok.experimental.*;
 
 import lombok.*;
 
 import freemarker.cache.*;
-import info.magnolia.freemarker.*;
-import info.magnolia.objectfactory.*;
 
 /**
  * @author daniel.kasmeroglu@kasisoft.net
  */
 @FieldDefaults(level = AccessLevel.PRIVATE)
-@Slf4j
+@Log4j2
 public class MgnlFmxTemplateLoader extends FmxTemplateLoader {
 
   public MgnlFmxTemplateLoader() {

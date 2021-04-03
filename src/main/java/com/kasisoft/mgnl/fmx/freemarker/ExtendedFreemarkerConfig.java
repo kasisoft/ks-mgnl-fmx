@@ -2,25 +2,26 @@ package com.kasisoft.mgnl.fmx.freemarker;
 
 import static com.kasisoft.mgnl.fmx.internal.Messages.*;
 
+import info.magnolia.freemarker.*;
+
 import com.kasisoft.libs.common.spi.*;
 
 import javax.annotation.*;
 
 import java.util.*;
 
-import lombok.extern.slf4j.*;
+import lombok.extern.log4j.*;
 
 import lombok.experimental.*;
 
 import lombok.*;
 
 import freemarker.template.*;
-import info.magnolia.freemarker.*;
 
 /**
  * @author daniel.kasmeroglu@kasisoft.net
  */
-@Slf4j
+@Log4j2
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ExtendedFreemarkerConfig extends FreemarkerConfig {
 
