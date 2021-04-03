@@ -36,7 +36,7 @@ public class ExtendedFreemarkerConfig extends FreemarkerConfig {
     if( ! records.isEmpty() ) {
       directives = new HashMap<>();
       records.stream().forEach( $ -> directives.put( $.getName(), $.getTemplateModel() ) );
-      directives.forEach( (n, m) -> log.debug( debug_directive.format( n, m ) ) );
+      directives.forEach( (n, m) -> log.debug(String.format( debug_directive, n, m ) ) );
     }
   }
 

@@ -60,7 +60,7 @@ public class MgnlFmxTemplateLoader extends FmxTemplateLoader {
             if( loader == null ) {
               loader = l;
             } else {
-              log.error( error_conflicting_loaders.format( loader.getClass().getName(), l.getClass().getName() ) );
+              log.error( String.format(error_conflicting_loaders, loader.getClass().getName(), l.getClass().getName() ) );
             }
           }
         }
