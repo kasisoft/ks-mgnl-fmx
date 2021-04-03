@@ -29,7 +29,8 @@ import freemarker.cache.*;
 public class MgnlFmxTemplateLoader extends FmxTemplateLoader {
 
   public MgnlFmxTemplateLoader() {
-    super( new DefaultLoader(), null, MgnlFmxTemplateLoader::transformDirective, getAttributeMappers() );
+    // super( new DefaultLoader(), null, MgnlFmxTemplateLoader::transformDirective, getAttributeMappers() );
+    super(new DefaultLoader());
   }
   
   private static Map<String, BiFunction<String, String, String>> getAttributeMappers() {
