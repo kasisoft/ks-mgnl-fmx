@@ -21,7 +21,7 @@ I assume that you're familiar with Maven. If not I suggest to visit the followin
 
 ## Requirements
 
-* Java 8
+* Java 1.8
 * Magnolia 5.6
 
 
@@ -40,7 +40,7 @@ I assume that you're familiar with Maven. If not I suggest to visit the followin
 
 MIT License
 
-Copyright (c) 2017 Daniel Kasmeroglu (Kasisoft)
+Copyright (c) 2021 Daniel Kasmeroglu (Kasisoft)
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
