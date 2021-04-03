@@ -10,7 +10,6 @@ import info.magnolia.jcr.util.*;
 
 import com.kasisoft.mgnl.fmx.internal.*;
 
-import javax.jcr.*;
 import javax.validation.constraints.*;
 
 import lombok.experimental.*;
@@ -24,27 +23,25 @@ import lombok.*;
  * @author daniel.kasmeroglu@kasisoft.net
  */
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class KsSetPropertyTask extends AbstractTask {
+public class KsSetNodeTask extends AbstractTask {
   
-  String    propertyPath;
-  String    value;
+  String    nodePath;
   String    workspace;
   String    defaultNodeType;
-
-  public KsSetPropertyTask(@NotNull String path, @NotNull String propValue) {
-    super(KsSetPropertyTask.class.getSimpleName(), String.format("Setting property '%s' to '%s'", path, propValue));
+  
+  public KsSetNodeTask(@NotNull String path) {
+    super(KsSetNodeTask.class.getSimpleName(), String.format("Setting node '%s'", path));
     workspace       = RepositoryConstants.CONFIG;
     defaultNodeType = NodeTypes.ContentNode.NAME;
-    propertyPath    = path;
-    value           = propValue;
+    nodePath        = path;
   }
   
-  public KsSetPropertyTask withWorkspace(@NotNull String workspace) {
+  public KsSetNodeTask withWorkspace(@NotNull String workspace) {
     this.workspace = workspace;
     return this;
   }
 
-  public KsSetPropertyTask withDefaultNodeType(@NotNull String defaultNodeType) {
+  public KsSetNodeTask withDefaultNodeType(@NotNull String defaultNodeType) {
     this.defaultNodeType = defaultNodeType;
     return this;
   }
@@ -61,31 +58,14 @@ public class KsSetPropertyTask extends AbstractTask {
   }
   
   private void verifyPath() throws Exception {
-    
-    if (propertyPath.charAt(0) != '/') {
-      throw new TaskExecutionException(String.format("Invalid path '%s'. Must start with a '/' character", propertyPath));
+    if (nodePath.charAt(0) != '/') {
+      throw new TaskExecutionException(String.format("Invalid path '%s'. Must start with a '/' character", nodePath));
     }
-
-    int idx = propertyPath.indexOf('@');
-    if( (idx < 2) || (idx == propertyPath.length() - 1) ) {
-      throw new TaskExecutionException(String.format("Invalid property path '%s'. There must be a segment before the '@' character and the name after it"));
-    }
-    
   }
   
-  
   private void executeImpl(InstallContext ctx) throws Exception {
-    
     verifyPath();
-    
-    int    idx    = propertyPath.indexOf('@');
-    
-    String path   = propertyPath.substring(0, idx);
-    String name   = propertyPath.substring(idx + 1);
-    
-    Node   node   = MgnlFmxUtils.grantNode(MgnlFmxUtils.getSession(workspace), path, defaultNodeType);
-    node.setProperty(name, value);
-    
+    MgnlFmxUtils.grantNode(MgnlFmxUtils.getSession(workspace), nodePath, defaultNodeType);
   }
   
 } /* ENDCLASS */

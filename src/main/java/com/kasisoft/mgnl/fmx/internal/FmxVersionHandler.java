@@ -8,6 +8,7 @@ import info.magnolia.module.*;
 
 import info.magnolia.jcr.util.*;
 
+import com.kasisoft.mgnl.fmx.freemarker.*;
 import com.kasisoft.mgnl.fmx.internal.tasks.*;
 
 import org.apache.commons.lang3.*;
@@ -42,7 +43,7 @@ public class FmxVersionHandler implements ModuleVersionHandler {
   @Override 
   @Nonnull
   public final List<Delta> getDeltas( @Nonnull InstallContext ctx, @Nonnull Version from ) {
-    try { 
+    try {
       return getDeltasImpl(ctx, from);
     } catch (Exception ex) {
       throw wrap(ex);
@@ -51,25 +52,49 @@ public class FmxVersionHandler implements ModuleVersionHandler {
 
   private List<Delta> getDeltasImpl(InstallContext ctx, Version from) throws Exception {
     
-    List<Delta> result        = new ArrayList<>(3);
+    List<Delta> result        = new ArrayList<>(2);
     Version     version       = ctx.getCurrentModuleDefinition().getVersion();
     String      moduleName    = ctx.getCurrentModuleDefinition().getName();
     boolean     installation  = from == Version.UNDEFINED_FROM;
     
     if (installation) {
       // in case of an installation we might need to setup the basic module structure
-      result.add(db(from, version, moduleName).addTask(new GrantModuleTask(moduleName)));
+      result.add(db(from, version, moduleName).addTasks(install(version, ctx.getConfigJCRSession())));
+    } else {
+      result.add(db(from, version, moduleName).addTask(new KsSetPropertyTask("/modules/ks-mgnl-fmx@version", version.toString())));
     }
-    
-    result.add(db(from, version, moduleName).addTask(new JcrConfigurationTask(new FreemarkerExtension())));
-    
-    result.add(db(from, version, moduleName).addTask(new KsSetPropertyTask(String.format("/modules/%s@%s", moduleName, PN_VERSION), version.toString())));
     
     return result;
     
   }
   
-  private DeltaBuilder db( Version current, Version toVersion, String moduleName) {
+  private List<Task> install(Version toVersion, Session session) {
+    
+    List<Task> result = new ArrayList<>();
+    
+    result.add(new KsSetNodeTask("/modules/ks-mgnl-fmx").withDefaultNodeType(NodeTypes.Folder.NAME));
+    
+    // override the original fm config class 
+    result.add(new KsSetPropertyTask("/server/rendering/freemarker@class", ExtendedFreemarkerConfig.class.getName()));
+    
+    // set our own templateloader which will support fmx templates
+    result.add(new KsSetNodeTask("/server/rendering/freemarker/templateLoaders/fmx"));
+    result.add(new KsSetPropertyTask("/server/rendering/freemarker/templateLoaders/fmx@class", MgnlFmxTemplateLoader.class.getName()));
+    result.add(new KsSetPropertyTask("/server/rendering/freemarker/templateLoaders/fmx@debug", "false"));
+    
+    // provide an additional context attribute
+    result.add(new KsSetPropertyTask("/server/rendering/freemarker/contextAttributes/fmx@componentClass", FmxMgnlDirectives.class.getName()));
+    result.add(new KsSetPropertyTask("/server/rendering/freemarker/contextAttributes/fmx@name", "fmx"));
+    
+    result.add(new OrderNodeToFirstPositionTask("Positioning Freemarker Template Loader for FMX", "server/rendering/freemarker/templateLoaders/fmx"));
+    
+    result.add(new KsSetPropertyTask("/modules/ks-mgnl-fmx@version", toVersion.toString()));
+    
+    return result;
+    
+  }
+  
+  private DeltaBuilder db(Version current, Version toVersion, String moduleName) {
     if (current == Version.UNDEFINED_FROM) {
       return DeltaBuilder.install(toVersion, String.format("Installing module '%s' with version '%s'", moduleName, toVersion));
     } else {
@@ -85,8 +110,6 @@ public class FmxVersionHandler implements ModuleVersionHandler {
     
     try {
       
-      // log.debug( msg_testing_version.format( ctx.getCurrentModuleDefinition().getName() ) );
-
       Node module = SessionUtil.getNode( ctx.getConfigJCRSession(), getModulePath( ctx ) );
       if( module != null ) {
 
@@ -111,8 +134,8 @@ public class FmxVersionHandler implements ModuleVersionHandler {
     return DeltaBuilder.startup(ctx.getCurrentModuleDefinition(), Collections.emptyList());
   }
 
-  private static String getModulePath(InstallContext ctx) {
+  private String getModulePath(InstallContext ctx) {
     return String.format(FMT_MODULES, ctx.getCurrentModuleDefinition().getName());
   }
-  
+    
 } /* ENDCLASS */

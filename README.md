@@ -22,7 +22,7 @@ I assume that you're familiar with Maven. If not I suggest to visit the followin
 ## Requirements
 
 * Java 1.8
-* Magnolia 5.6
+* Magnolia 6.2
 
 
 ## Maven
