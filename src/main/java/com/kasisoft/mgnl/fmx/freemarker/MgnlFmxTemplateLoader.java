@@ -29,24 +29,23 @@ import freemarker.cache.*;
 public class MgnlFmxTemplateLoader extends FmxTemplateLoader {
 
   public MgnlFmxTemplateLoader() {
-    // super( new DefaultLoader(), null, MgnlFmxTemplateLoader::transformDirective, getAttributeMappers() );
-    super(new DefaultLoader());
+    super(new DefaultLoader(), null, MgnlFmxTemplateLoader::transformDirective, getAttributeMappers(), true);
   }
   
   private static Map<String, BiFunction<String, String, String>> getAttributeMappers() {
     Map<String, BiFunction<String, String, String>> result = new HashMap<>();
-    result.put( "cms.area", MgnlFmxTemplateLoader::mapCmsArea );
+    result.put("cms.area", MgnlFmxTemplateLoader::mapCmsArea);
     return result;
   }
   
-  private static String mapCmsArea( String attrLocalName, String value ) {
+  private static String mapCmsArea(String attrLocalName, String value) {
     // we don't want to use inner quotes, so instead of <fmx:cms-area name="'main'"/> we can write
     // <fmx:cms-area name="main"/> which looks much better.
     return String.format( "\"%s\"", value );
   }
   
-  private static String transformDirective( String name ) {
-    return name.replace( '-', '.' );
+  private static String transformDirective(String name) {
+    return name.replace('-', '.');
   }
   
   private static class DefaultLoader implements TemplateLoader {
@@ -54,14 +53,14 @@ public class MgnlFmxTemplateLoader extends FmxTemplateLoader {
     TemplateLoader    loader;
     
     private synchronized TemplateLoader loader() {
-      if( loader == null ) {
-        FreemarkerConfig config = Components.getComponent( FreemarkerConfig.class );
-        for( TemplateLoader l : config.getTemplateLoaders() ) {
-          if( ! (l instanceof MgnlFmxTemplateLoader) ) {
-            if( loader == null ) {
+      if (loader == null) {
+        FreemarkerConfig config = Components.getComponent(FreemarkerConfig.class);
+        for (TemplateLoader l : config.getTemplateLoaders()) {
+          if (!(l instanceof MgnlFmxTemplateLoader)) {
+            if (loader == null) {
               loader = l;
             } else {
-              log.error( String.format(error_conflicting_loaders, loader.getClass().getName(), l.getClass().getName() ) );
+              log.error(String.format(error_conflicting_loaders, loader.getClass().getName(), l.getClass().getName()));
             }
           }
         }
@@ -70,40 +69,40 @@ public class MgnlFmxTemplateLoader extends FmxTemplateLoader {
     }
     
     @Override
-    public Object findTemplateSource( String name ) throws IOException {
+    public Object findTemplateSource(String name) throws IOException {
       TemplateLoader loader = loader();
       Object         result = null;
-      if( loader != null ) {
-        result = loader.findTemplateSource( name );
+      if (loader != null) {
+        result = loader.findTemplateSource(name);
       }
       return result;
     }
 
     @Override
-    public long getLastModified( Object templateSource ) {
+    public long getLastModified(Object templateSource) {
       TemplateLoader loader = loader();
       long           result = 0L;
-      if( loader != null ) {
-        result = loader.getLastModified( templateSource );
+      if (loader != null) {
+        result = loader.getLastModified(templateSource);
       }
       return result;
     }
 
     @Override
-    public Reader getReader( Object templateSource, String encoding ) throws IOException {
+    public Reader getReader(Object templateSource, String encoding) throws IOException {
       TemplateLoader loader = loader();
       Reader         result = null;
-      if( loader != null ) {
-        result = loader.getReader( templateSource, encoding );
+      if (loader != null) {
+        result = loader.getReader(templateSource, encoding);
       }
       return result;
     }
 
     @Override
-    public void closeTemplateSource( Object templateSource ) throws IOException {
+    public void closeTemplateSource(Object templateSource) throws IOException {
       TemplateLoader loader = loader();
-      if( loader != null ) {
-        loader.closeTemplateSource( templateSource );
+      if (loader != null) {
+        loader.closeTemplateSource(templateSource);
       }
     }
     

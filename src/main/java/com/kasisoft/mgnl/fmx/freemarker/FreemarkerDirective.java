@@ -1,6 +1,6 @@
 package com.kasisoft.mgnl.fmx.freemarker;
 
-import javax.annotation.*;
+import javax.validation.constraints.*;
 
 import freemarker.template.*;
 
@@ -16,7 +16,7 @@ public interface FreemarkerDirective {
    * 
    * @return   The name for this directive. Neither <code>null</code> nor empty.
    */
-  @Nonnull
+  @NotNull
   String getName();
   
   /**
@@ -24,7 +24,7 @@ public interface FreemarkerDirective {
    * 
    * @return   The {@link TemplateModel} instance used to render some content. Not <code>null</code>.
    */
-  @Nonnull
+  @NotNull
   TemplateDirectiveModel getTemplateModel();
   
 } /* ENDINTERFACE */

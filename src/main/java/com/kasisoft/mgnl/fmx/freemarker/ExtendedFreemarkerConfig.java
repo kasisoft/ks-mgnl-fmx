@@ -2,7 +2,7 @@ package com.kasisoft.mgnl.fmx.freemarker;
 
 import info.magnolia.freemarker.*;
 
-import javax.annotation.*;
+import javax.validation.constraints.*;
 
 import java.util.*;
 
@@ -35,9 +35,9 @@ public class ExtendedFreemarkerConfig extends FreemarkerConfig {
   }
 
   @Override
-  public void setSharedVariables( @Nonnull Map<String, Object> configuredSharedVariables ) throws TemplateModelException {
-    super.setSharedVariables( configuredSharedVariables );
-    getSharedVariables().putAll( directives );
+  public void setSharedVariables(@NotNull Map<String, Object> configuredSharedVariables) throws TemplateModelException {
+    super.setSharedVariables(configuredSharedVariables);
+    getSharedVariables().putAll(directives);
   }
 
 } /* ENDCLASS */

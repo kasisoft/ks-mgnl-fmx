@@ -73,7 +73,6 @@ public class KsSetPropertyTask extends AbstractTask {
     
   }
   
-  
   private void executeImpl(InstallContext ctx) throws Exception {
     
     verifyPath();

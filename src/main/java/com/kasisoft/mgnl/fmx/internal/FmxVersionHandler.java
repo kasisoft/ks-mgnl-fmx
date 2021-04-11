@@ -11,10 +11,8 @@ import info.magnolia.jcr.util.*;
 import com.kasisoft.mgnl.fmx.freemarker.*;
 import com.kasisoft.mgnl.fmx.internal.tasks.*;
 
-import org.apache.commons.lang3.*;
-
-import javax.annotation.*;
 import javax.jcr.*;
+import javax.validation.constraints.*;
 
 import java.util.*;
 
@@ -28,25 +26,13 @@ import lombok.*;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class FmxVersionHandler implements ModuleVersionHandler {
   
-  private static final String PN_VERSION    = "version";
-  
-  private static final String FMT_MODULES   = "/modules/%s";
-  
-  private IllegalStateException wrap(Exception ex) {
-    if (ex instanceof IllegalStateException) {
-      return (IllegalStateException) ex;
-    } else {
-      return new IllegalStateException(ex);
-    }
-  }
-  
   @Override 
-  @Nonnull
-  public final List<Delta> getDeltas( @Nonnull InstallContext ctx, @Nonnull Version from ) {
+  @NotNull
+  public final List<Delta> getDeltas(@NotNull InstallContext ctx, @NotNull Version from) {
     try {
       return getDeltasImpl(ctx, from);
     } catch (Exception ex) {
-      throw wrap(ex);
+      throw MgnlFmxUtils.wrapIllegalStateException(ex);
     }
   }
 
@@ -70,7 +56,7 @@ public class FmxVersionHandler implements ModuleVersionHandler {
   
   private List<Task> install(Version toVersion, Session session) {
     
-    List<Task> result = new ArrayList<>();
+    List<Task> result = new ArrayList<>(10);
     
     result.add(new KsSetNodeTask("/modules/ks-mgnl-fmx").withDefaultNodeType(NodeTypes.Folder.NAME));
     
@@ -103,39 +89,15 @@ public class FmxVersionHandler implements ModuleVersionHandler {
   }
   
   @Override 
-  @Nonnull 
-  public final Version getCurrentlyInstalled( @Nonnull InstallContext ctx ) {
-    
-    Version result = Version.UNDEFINED_FROM;
-    
-    try {
-      
-      Node module = SessionUtil.getNode( ctx.getConfigJCRSession(), getModulePath( ctx ) );
-      if( module != null ) {
-
-        String version = StringUtils.trimToNull( PropertyUtil.getString( module, PN_VERSION ) );
-        if( version != null ) {
-          result = Version.parseVersion( version );
-        }
-        
-      }
-      
-    } catch( Exception ex ) {
-      throw wrap(ex);
-    }
-    
-    return result;
-    
+  @NotNull 
+  public Version getCurrentlyInstalled(@NotNull InstallContext ctx) {
+    return MgnlFmxUtils.getModuleVersion("ks-mgnl-fmx"); 
   }
 
   @SuppressWarnings("deprecation")
   @Override
-  public Delta getStartupDelta(@Nonnull InstallContext ctx) {
+  public Delta getStartupDelta(@NotNull InstallContext ctx) {
     return DeltaBuilder.startup(ctx.getCurrentModuleDefinition(), Collections.emptyList());
-  }
-
-  private String getModulePath(InstallContext ctx) {
-    return String.format(FMT_MODULES, ctx.getCurrentModuleDefinition().getName());
   }
     
 } /* ENDCLASS */

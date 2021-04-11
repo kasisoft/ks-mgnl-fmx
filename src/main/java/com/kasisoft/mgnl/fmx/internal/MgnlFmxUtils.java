@@ -1,8 +1,16 @@
 package com.kasisoft.mgnl.fmx.internal;
 
+import info.magnolia.repository.*;
+
+import info.magnolia.module.model.*;
+
 import info.magnolia.module.delta.*;
 
+import info.magnolia.jcr.util.*;
+
 import info.magnolia.context.*;
+
+import org.apache.commons.lang3.*;
 
 import javax.jcr.*;
 import javax.validation.constraints.*;
@@ -49,4 +57,37 @@ public class MgnlFmxUtils {
     }
   }
 
+  public static IllegalStateException wrapIllegalStateException(Exception ex) {
+    if (ex instanceof IllegalStateException) {
+      return (IllegalStateException) ex;
+    } else {
+      return new IllegalStateException(ex);
+    }
+  }
+  
+  public static @NotNull Version getModuleVersion(@NotNull String moduleName) {
+    
+    Version result = Version.UNDEFINED_FROM;
+    
+    try {
+      
+      Node module = SessionUtil.getNode(MgnlContext.getJCRSession(RepositoryConstants.CONFIG), "/modules/" + moduleName);
+      if (module != null) {
+
+        String version = StringUtils.trimToNull(PropertyUtil.getString(module, "version"));
+        if (version != null) {
+          result = Version.parseVersion(version);
+        }
+        
+      }
+      
+    } catch (Exception ex) {
+      throw wrapIllegalStateException(ex);
+    }
+    
+    return result;
+    
+  }
+
+  
 } /* ENDCLASS */

@@ -12,7 +12,7 @@ import freemarker.template.*;
 public class FmxMgnlDirectives extends HashMap<String, TemplateDirectiveModel> {
 
   public FmxMgnlDirectives() {
-    put( "clean", new CleanDirective() );
+    put("clean", new CleanDirective());
   }
   
 } /* ENDCLASS */
