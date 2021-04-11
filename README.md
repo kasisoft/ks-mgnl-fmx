@@ -35,9 +35,9 @@ I assume that you're familiar with Maven. If not I suggest to visit the followin
 ### Releases
 
      <dependency>
-         <groupId>com.kasisoft.mgnl</groupId>
+         <groupId>com.kasisoft</groupId>
          <artifactId>ks-mgnl-fmx</artifactId>
-         <version>0.8</version>
+         <version>1.0</version>
      </dependency>
     
 

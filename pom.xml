@@ -3,7 +3,7 @@
 
   <modelVersion>4.0.0</modelVersion>
   
-  <groupId>com.kasisoft.mgnl</groupId>
+  <groupId>com.kasisoft</groupId>
   <artifactId>ks-mgnl-fmx</artifactId>
   <version>0.8-SNAPSHOT</version>
   <packaging>jar</packaging>
