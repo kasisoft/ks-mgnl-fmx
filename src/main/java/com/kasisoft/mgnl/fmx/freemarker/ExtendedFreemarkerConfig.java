@@ -25,7 +25,7 @@ public class ExtendedFreemarkerConfig extends FreemarkerConfig {
 
   Map<String, TemplateDirectiveModel>   directives;
   
-  public void init() {
+  public ExtendedFreemarkerConfig() {
     directives                                       = new HashMap<>();
     ServiceLoader<FreemarkerDirective> serviceLoader = ServiceLoader.load(FreemarkerDirective.class);
     for (FreemarkerDirective fmd : serviceLoader) {

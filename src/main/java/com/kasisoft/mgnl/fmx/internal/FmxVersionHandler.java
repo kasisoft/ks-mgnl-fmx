@@ -46,7 +46,7 @@ public class FmxVersionHandler implements ModuleVersionHandler {
     if (installation) {
       // in case of an installation we might need to setup the basic module structure
       result.add(db(from, version, moduleName).addTasks(install(version, ctx.getConfigJCRSession())));
-    } else {
+    } else if (!from.isEquivalent(version)) {
       result.add(db(from, version, moduleName).addTask(new KsSetPropertyTask("/modules/ks-mgnl-fmx@version", version.toString())));
     }
     
