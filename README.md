@@ -12,6 +12,11 @@ Furthermore it's possible to easily add additional directives.
 * [GIT](https://github.com/kasisoft/ks-mgnl-fmx)
 
 
+# Disclaimer
+
+Use it at your own risk.
+
+
 # Development Setup
 
 I assume that you're familiar with Maven. If not I suggest to visit the following page:

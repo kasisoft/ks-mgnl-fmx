@@ -1,5 +1,7 @@
 package com.kasisoft.mgnl.fmx.internal;
 
+import static com.kasisoft.mgnl.fmx.internal.Messages.*;
+
 import info.magnolia.repository.*;
 
 import info.magnolia.module.model.*;
@@ -32,7 +34,7 @@ public class MgnlFmxUtils {
         if (open != -1) {
           int close = nodeName.indexOf('{', open);
           if ((close == -1) || (close == open + 1)) {
-            throw new TaskExecutionException(String.format("Invalid path '%s' (segment: '%s')", path, segments[i]));
+            throw new TaskExecutionException(String.format(error_invalid_path, path, segments[i]));
           }
           nodeType = nodeName.substring(open + 1, close);
           nodeName = nodeName.substring(0, open);
@@ -45,7 +47,7 @@ public class MgnlFmxUtils {
       }
       return result;
     } catch (Exception ex) {
-      throw new TaskExecutionException(String.format("Failed to create node for path '%s' !", path), ex);
+      throw new TaskExecutionException(String.format(error_creating_node, path), ex);
     }
   }
   
@@ -53,7 +55,7 @@ public class MgnlFmxUtils {
     try {
       return MgnlContext.getJCRSession(workspace);
     } catch (Exception ex) {
-      throw new TaskExecutionException(String.format("Failed to access workspace '%s' !", workspace), ex);
+      throw new TaskExecutionException(String.format(error_getting_workspace, workspace), ex);
     }
   }
 

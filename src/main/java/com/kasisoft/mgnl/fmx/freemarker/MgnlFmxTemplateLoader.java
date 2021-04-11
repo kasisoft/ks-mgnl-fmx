@@ -41,7 +41,7 @@ public class MgnlFmxTemplateLoader extends FmxTemplateLoader {
   private static String mapCmsArea(String attrLocalName, String value) {
     // we don't want to use inner quotes, so instead of <fmx:cms-area name="'main'"/> we can write
     // <fmx:cms-area name="main"/> which looks much better.
-    return String.format( "\"%s\"", value );
+    return String.format("\"%s\"", value);
   }
   
   private static String transformDirective(String name) {

@@ -1,5 +1,7 @@
 package com.kasisoft.mgnl.fmx.internal.tasks;
 
+import static com.kasisoft.mgnl.fmx.internal.Messages.*;
+
 import info.magnolia.repository.*;
 
 import info.magnolia.module.delta.*;
@@ -63,12 +65,12 @@ public class KsSetPropertyTask extends AbstractTask {
   private void verifyPath() throws Exception {
     
     if (propertyPath.charAt(0) != '/') {
-      throw new TaskExecutionException(String.format("Invalid path '%s'. Must start with a '/' character", propertyPath));
+      throw new TaskExecutionException(String.format(error_unexpected_relpath, propertyPath));
     }
 
     int idx = propertyPath.indexOf('@');
     if( (idx < 2) || (idx == propertyPath.length() - 1) ) {
-      throw new TaskExecutionException(String.format("Invalid property path '%s'. There must be a segment before the '@' character and the name after it"));
+      throw new TaskExecutionException(String.format(error_invalid_property_path, propertyPath));
     }
     
   }

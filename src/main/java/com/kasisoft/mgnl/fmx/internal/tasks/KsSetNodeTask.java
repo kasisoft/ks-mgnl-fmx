@@ -1,5 +1,7 @@
 package com.kasisoft.mgnl.fmx.internal.tasks;
 
+import static com.kasisoft.mgnl.fmx.internal.Messages.*;
+
 import info.magnolia.repository.*;
 
 import info.magnolia.module.delta.*;
@@ -30,7 +32,7 @@ public class KsSetNodeTask extends AbstractTask {
   String    defaultNodeType;
   
   public KsSetNodeTask(@NotNull String path) {
-    super(KsSetNodeTask.class.getSimpleName(), String.format("Setting node '%s'", path));
+    super(KsSetNodeTask.class.getSimpleName(), String.format(label_setting_node, path));
     workspace       = RepositoryConstants.CONFIG;
     defaultNodeType = NodeTypes.ContentNode.NAME;
     nodePath        = path;
@@ -59,7 +61,7 @@ public class KsSetNodeTask extends AbstractTask {
   
   private void verifyPath() throws Exception {
     if (nodePath.charAt(0) != '/') {
-      throw new TaskExecutionException(String.format("Invalid path '%s'. Must start with a '/' character", nodePath));
+      throw new TaskExecutionException(String.format(error_unexpected_relpath, nodePath));
     }
   }
   
