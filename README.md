@@ -21,7 +21,7 @@ Use it at your own risk.
 
 I assume that you're familiar with Maven. If not I suggest to visit the following page:
 
-* https://maven.apache.org/
+* [https://maven.apache.org/](https://maven.apache.org/)
 
 
 ## Requirements
